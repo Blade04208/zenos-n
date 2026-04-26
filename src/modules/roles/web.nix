@@ -18,10 +18,6 @@ let
       id = "{a6c4a591-f1b2-4f03-b3ff-767e5bedf4e7}";
       url = "https://addons.mozilla.org/firefox/downloads/latest/user-agent-string-switcher/latest.xpi";
     };
-    keepassxc = {
-      id = "keepassxc-browser@keepassxc.org";
-      url = "https://addons.mozilla.org/firefox/downloads/latest/keepassxc-browser/latest.xpi";
-    };
   };
 
   # Helper to lock preferences

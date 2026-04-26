@@ -27,8 +27,8 @@
 
     swisstag.url = "github:doromiert/swisstag";
     zbridge = {
-      # url = "github:doromiert/zerobridge";
-      url = "path:/home/doromiert/Projects/zerobridge";
+      url = "github:doromiert/zerobridge";
+      # url = "path:/home/doromiert/Projects/zerobridge";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -46,8 +46,8 @@
     };
 
     nixpwamaker = {
-      # url = "github:doromiert/nixpwamaker";
-      url = "path:/home/doromiert/Projects/nixpwamaker";
+      url = "github:doromiert/nixpwamaker";
+      # url = "path:/home/doromiert/Projects/nixpwamaker";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -156,10 +156,10 @@
                   # [ ZenFS ] Core Configuration
                   services.zenfs = {
                     enable = true;
-                    roaming.enable = true;
+                    roaming.enable = false;
                     janitor = {
                       offloader = {
-                        enable = true;
+                        enable = false;
                         threshold = 80;
                       };
                     };
@@ -239,89 +239,11 @@
     in
     {
       nixosConfigurations = {
-        doromi-tul-2 = mkHost {
-          prettyName = "doromi tul 2";
+        book3 = mkHost {
+          prettyName = "Book3";
 
-          rootUUID = "8e1e39fe-becf-40f7-bf3e-447ecdfef32d";
-          bootUUID = "E4BC-AD87";
-          deviceIcon = "desktop";
-          locale = {
-            timeZone = "Europe/Warsaw";
-            language = "en_US.UTF-8";
-            defaultLocale = "pl_PL.UTF-8";
-            kbLayout = "pl";
-          };
-          users = [
-            "doromiert"
-            "hubi"
-          ];
-          desktop = "gnome";
-          roles = [
-            "web"
-            # "gaming"
-            "creative/audio"
-            "creative/graphics"
-            "creative/video"
-            "creative/misc"
-            "dev"
-            "pipewire"
-            "zbridge"
-          ];
-          extraModules = [
-            inputs.nixos-hardware.nixosModules.common-cpu-amd
-            inputs.nixos-hardware.nixosModules.common-gpu-amd
-            inputs.nixos-hardware.nixosModules.common-pc-ssd
-            inputs.nix-gaming.nixosModules.platformOptimizations
-            inputs.jovian.nixosModules.default
-          ];
-          excludeCoreModules = [
-            "syncthing"
-          ];
-        };
-
-        doromipad = mkHost {
-          prettyName = "doromipad";
-          deviceIcon = "laptop";
-          rootUUID = "f3fbcbcc-1063-426b-a0ab-0ddb7ff9dd76";
-          bootUUID = "3296-E5E9";
-          locale = {
-            timeZone = "Europe/Warsaw";
-            language = "en_US.UTF-8";
-            defaultLocale = "pl_PL.UTF-8";
-            kbLayout = "pl";
-          };
-          users = [
-            "doromiert"
-            "hubi"
-          ];
-          desktop = "gnome";
-          roles = [
-            "web"
-            "creative/audio"
-            "creative/graphics"
-            "creative/misc"
-            "dev"
-            "pipewire"
-            "zbridge"
-            "tablet"
-          ];
-          # ill change this once i install it for more than testing
-          # excludeCoreModules = [
-          #   "syncthing"
-          # ];
-          extraModules = [
-            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-l13
-            inputs.nixos-hardware.nixosModules.common-cpu-intel
-            inputs.nixos-hardware.nixosModules.common-gpu-intel
-            inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-          ];
-        };
-
-        test-vm = mkHost {
-          prettyName = "test vm";
-
-          rootUUID = "8e1e39fe-becf-40f7-bf3e-447ecdfef32d";
-          bootUUID = "E4BC-AD87";
+          rootUUID = "11c806f5-3c67-4c3d-af29-26d0d074d773";
+          bootUUID = "83E2-E894";
           locale = {
             timeZone = "Europe/Dublin";
             language = "en_US.UTF-8";
@@ -337,6 +259,9 @@
             "dev"
             "pipewire"
             "zbridge"
+            "gaming"
+            "creative/graphics"
+            "hyprland"
           ];
           # ill change this once i install it for more than testing
           excludeCoreModules = [
@@ -345,55 +270,6 @@
           extraModules = [
             inputs.nixos-hardware.nixosModules.common-cpu-intel
             inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-
-            # Virtualization Guest Support
-            # This enables SPICE/QEMU agents or VMware/VirtualBox tools automatically
-            (
-              { modulesPath, ... }:
-              {
-                imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
-                services.qemuGuest.enable = true;
-                services.spice-vdagentd.enable = true; # Essential for GNOME copy/paste in VM
-              }
-            )
-          ];
-        };
-        aethertop = mkHost {
-          prettyName = "aethertop";
-
-          rootUUID = "8e1e39fe-becf-40f7-bf3e-447ecdfef32d";
-          bootUUID = "E4BC-AD87";
-          locale = {
-            timeZone = "America/Puerto_Rico";
-            language = "en_US.UTF-8";
-            defaultLocale = "es_PR.UTF-8";
-            kbLayout = "us";
-          };
-          users = [
-            "aether"
-          ];
-          desktop = "gnome";
-          roles = [
-            "web"
-            "gaming"
-            "creative/audio"
-            "creative/graphics"
-            "creative/video"
-            "creative/misc"
-            "dev"
-            "pipewire"
-            "zbridge"
-          ];
-          # ill change this once i install it for more than testing
-          excludeCoreModules = [
-            "syncthing"
-          ];
-          extraModules = [
-            inputs.nixos-hardware.nixosModules.common-cpu-amd
-            inputs.nixos-hardware.nixosModules.common-gpu-amd
-            inputs.nixos-hardware.nixosModules.common-pc-ssd
-            inputs.nix-gaming.nixosModules.platformOptimizations
-            inputs.jovian.nixosModules.default
           ];
         };
       };

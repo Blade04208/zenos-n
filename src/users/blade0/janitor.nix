@@ -5,7 +5,7 @@
 
     # [ DUMB JANITOR ]
     dumb = {
-      enable = true;
+      enable = false;
       interval = "5min";
       gracePeriod = 60;
       watchedDirs = [ "/home/blade0/Downloads" ];
@@ -148,16 +148,6 @@
         ];
         "Games/Saturn" = [ "sat" ];
       };
-    };
-
-    # [ MUSIC JANITOR ]
-    music = {
-      enable = true;
-      # tagging.enable = true; # Enable Swisstag
-      musicDir = "/home/blade0/Music";
-      unsortedDir = "/home/blade0/Music/.database";
-      artistSplitSymbols = [ ";" ];
-      interval = "1min";
     };
   };
 }

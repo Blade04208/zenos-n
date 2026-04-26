@@ -62,8 +62,8 @@
     };
 
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-      name = "Black Box";
-      command = "blackbox";
+      name = "Ptyxis";
+      command = "ptyxis";
       binding = "<Super>t";
     };
 
