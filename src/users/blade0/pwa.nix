@@ -17,7 +17,7 @@ let
 in
 {
   programs.pwamaker = {
-    enable = true;
+    enable = false;
     firefoxGnomeTheme = inputs.firefox-gnome-theme;
 
     # [NEW] Enable the internal Dispatcher

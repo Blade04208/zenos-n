@@ -45,8 +45,8 @@ let
     hide-minimized
     hide-cursor
     burn-my-windows
-    compiz-windows-effect
-    compiz-alike-magic-lamp-effect
+    #    compiz-windows-effect
+    #    compiz-alike-magic-lamp-effect
     rounded-window-corners-reborn
     blur-my-shell
 
@@ -54,7 +54,7 @@ let
     alphabetical-app-grid
     category-sorted-app-grid
     coverflow-alt-tab
-    hide-top-bar
+    #    hide-top-bar
     mouse-tail
     window-is-ready-remover
 
@@ -62,9 +62,11 @@ let
     date-menu-formatter
 
     # System
-    gsconnect
+    #    gsconnect
     clipboard-indicator
     notification-timeout
+    appindicator
+    mpris-label
   ]);
 in
 {
@@ -174,29 +176,14 @@ in
         gst_all_1.gst-libav # Essential for common formats like .mp4/.mkv
 
         gnome-tweaks
-        fake-gnome-terminal
-        kitty
         gnome-extension-manager
         wl-clipboard
         dconf-editor
-
-        biblioteca
-        dialect
-        decoder
-        raider
-        wike
-        curtail
-        czkawka
-        hieroglyphic
-        warehouse
-        switcheroo
-        letterpress
+        ptyxis
         resources
         icon-library
-        pika-backup
-        helvum
-        commit
         nautilus-open-any-terminal
+        gnome-builder
       ]
       ++ extensions;
 
@@ -220,6 +207,7 @@ in
 
   services.flatpak.packages = [
     "com.github.tchx84.Flatseal"
+    "app.devsuite.Ptyxis"
   ];
 
   # 3. Declarative GSettings (Dconf) for All Users
@@ -234,10 +222,8 @@ in
             gtk-enable-primary-paste = false;
           };
           "com/github/stunkymonkey/nautilus-open-any-terminal" = {
-            terminal = "kitty";
-            keybindings = "<Ctrl><Alt>t";
-            new-tab = true;
-            flatpak = false;
+            enable = true;
+            terminal = "ptyxis";
           };
 
           "org/gnome/shell" = {

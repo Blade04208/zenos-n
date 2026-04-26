@@ -35,22 +35,10 @@ in
     ];
   };
 
-  jovian = {
-    steam.enable = true;
-    decky-loader = {
-      enable = true;
-    };
-  };
-
   # -- VR Configuration --
   # ALVR firewall rules are critical for Quest 3 streaming
-  programs.alvr = {
-    enable = true;
-    openFirewall = true;
-  };
 
   # High-performance UDEV rules for VR headsets and controllers
-  hardware.graphics.enable = true;
 
   # -- System Packages --
   environment.systemPackages = with pkgs; [
@@ -58,42 +46,42 @@ in
     gamescope
     mangohud
     gamemode
-    steam-rom-manager
+    # steam-rom-manager
     # decky-loader
-    appimage-run # Required for Suyu
-    yuzu-suyu-wrapper # Exposes 'yuzu' command
+    # appimage-run # Required for Suyu
+    # yuzu-suyu-wrapper # Exposes 'yuzu' command
 
     # VR Stack
-    wlx-overlay-s # Wayland VR Desktop Overlay
+    # wlx-overlay-s # Wayland VR Desktop Overlay
     # ovr-advanced-settings # (Check availability in your specific nixpkgs channel)
 
     # Launchers
     prismlauncher
 
     # Emulators (Verify availability in your flake inputs/unstable)
-    ryubing # Switch (Alternate)
-    dolphin-emu # GC/Wii
-    pcsx2 # PS2
-    rpcs3 # PS3
-    duckstation # PS1
-    ppsspp # PSP
-    xemu # Xbox
+    # ryubing # Switch (Alternate)
+    # dolphin-emu # GC/Wii
+    # pcsx2 # PS2
+    # rpcs3 # PS3
+    # duckstation # PS1
+    # ppsspp # PSP
+    # xemu # Xbox
     # yuzu-mainline       # [ ! ] Replaced by wrapper above
   ];
 
   # -- Flatpak Games & Tools --
   services.flatpak.packages = [
     # "app.xemu.xemu"                          # [DUPLICATE] pkgs.xemu is in systemPackages
-    "ca.parallel_launcher.ParallelLauncher" # Parallel N64 Launcher
-    "com.play0ad.zeroad" # 0 A.D.
+    # "ca.parallel_launcher.ParallelLauncher" # Parallel N64 Launcher
+    # "com.play0ad.zeroad" # 0 A.D.
     "com.usebottles.bottles" # Bottles (Wine Prefix Manager)
     # "io.github.ryubing.Ryujinx"              # [DUPLICATE] pkgs.ryubing is in systemPackages
-    "io.mgba.mGBA" # GBA Emulator
-    "net.davidotek.pupgui2" # ProtonUp-Qt
-    "net.kuribo64.melonDS" # DS Emulator
+    # "io.mgba.mGBA" # GBA Emulator
+    # "net.davidotek.pupgui2" # ProtonUp-Qt
+    # "net.kuribo64.melonDS" # DS Emulator
     # "org.DolphinEmu.dolphin-emu"             # [DUPLICATE] pkgs.dolphin-emu is in systemPackages
     # "org.ppsspp.PPSSPP"                      # [DUPLICATE] pkgs.ppsspp is in systemPackages
-    "io.github.glaumar.QRookie" # vr game downloader thing
+    # "io.github.glaumar.QRookie" # vr game downloader thing
   ];
 
   # -- ZeroPlay Library Scaffolder --

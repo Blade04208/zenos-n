@@ -1,5 +1,10 @@
 # kitchen sink for the user
-{ config, pkgs, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
 
 {
   users.users.blade0 = {
@@ -22,6 +27,22 @@
     home.file = {
       ".p10k.zsh".source = ./resources/p10k.zsh;
       # ".local/bin".source = ./bin;
+    };
+    xdg.userDirs = {
+      enable = true;
+      createDirectories = true;
+
+      # Standard XDG paths
+      download = "${config.users.users.blade0.home}/Downloads";
+      documents = "${config.users.users.blade0.home}/Documents";
+      desktop = "${config.users.users.blade0.home}/Desktop";
+
+      # Custom paths go into extraConfig
+      extraConfig = {
+        XDG_FUNNY_DIR = "${config.users.users.blade0.home}/Funny";
+        XDG_PROJECTS_DIR = "${config.users.users.blade0.home}/Projects";
+        XDG_ANDROID_DIR = "${config.users.users.blade0.home}/Android";
+      };
     };
 
     programs = {
@@ -91,7 +112,7 @@
         settings = {
           user = {
             name = "blade0";
-            email = "blade0@gmail.com";
+            email = "blade0@blade0.net";
           };
           pull.rebase = false;
           init.defaultBranch = "main";
@@ -99,4 +120,8 @@
       };
     };
   };
+  services.flatpak.packages = [
+    "com.jeffser.Nocturne" # Nocturne
+    "re.sonny.Workbench"
+  ];
 }

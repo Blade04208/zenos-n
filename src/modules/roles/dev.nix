@@ -7,8 +7,10 @@
     pkgs.nixfmt-rfc-style
     pkgs.android-tools
     pkgs.scrcpy
-    pkgs.unityhub
+    pkgs.distrobox
+    pkgs.podman
   ];
+  virtualisation.podman.enable = true;
 
   # -- Flatpak Dev Tools --
   services.flatpak.packages = [
