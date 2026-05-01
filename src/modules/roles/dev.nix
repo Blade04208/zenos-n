@@ -66,33 +66,6 @@
           ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
             # Marketplace logic preserved here
           ];
-
-        # [P5.4] Structural & UI Settings (Moved from graphical.nix)
-        userSettings = {
-          # UI/UX Cleanliness
-          "editor.fontFamily" = "'AtkynsonMono NF', monospace";
-          "editor.fontSize" = 14;
-          "window.menuBarVisibility" = "toggle";
-          "window.titleBarStyle" = "custom";
-          "workbench.colorTheme" = "Adwaita Dark";
-
-          # Structural Settings
-          "editor.formatOnSave" = true;
-          "editor.tabSize" = 4;
-          "editor.insertSpaces" = true;
-          "editor.detectIndentation" = false;
-
-          # Nix Integration
-          "nix.enableLanguageServer" = true;
-          "nix.serverPath" = "nixd";
-
-          # Git
-          "gitlens.codeLens.enabled" = true;
-          "git.confirmSync" = false;
-          "git.enableSmartCommit" = true;
-          "git.suggestSmartCommit" = false;
-          "git.autofetch" = true;
-        };
       };
     }
   ];
