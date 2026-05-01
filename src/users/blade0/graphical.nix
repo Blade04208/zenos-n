@@ -3,9 +3,6 @@
   ...
 }:
 {
-  imports = [
-    ./janitor.nix
-  ];
 
   home-manager.users.blade0 =
     {
@@ -15,7 +12,6 @@
     {
       imports = [
         ./dconf.nix
-        ./pwa.nix
         ./shortcuts.nix
         inputs.nixcord.homeModules.nixcord
       ];
@@ -253,7 +249,7 @@
           @import url("https://codeberg.org/ridge/Discord-Adblock/raw/branch/main/discord-adblock.css");
 
           /* Discord Gnome Theme */
-          @import url("https://raw.githubusercontent.com/ricewind012/discord-gnome-theme/main/dist/discord-gnome-theme.theme.css");
+          @import url("https://raw.githubusercontent.com/ricewind012/discord-gnome-theme/master/gnome.theme.css");
         '';
       };
     };

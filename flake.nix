@@ -261,7 +261,6 @@
             "web"
             "dev"
             "pipewire"
-            "zbridge"
             "gaming"
             "creative/graphics"
             "hyprland"
@@ -269,6 +268,7 @@
           # ill change this once i install it for more than testing
           excludeCoreModules = [
             "syncthing"
+            "misc-services"
           ];
           extraModules = [
             inputs.nixos-hardware.nixosModules.common-cpu-intel

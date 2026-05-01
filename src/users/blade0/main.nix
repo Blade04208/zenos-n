@@ -30,19 +30,8 @@
     };
     xdg.userDirs = {
       enable = true;
+      download = config.users.users.blade0.home + "/Downloads";
       createDirectories = true;
-
-      # Standard XDG paths
-      download = "${config.users.users.blade0.home}/Downloads";
-      documents = "${config.users.users.blade0.home}/Documents";
-      desktop = "${config.users.users.blade0.home}/Desktop";
-
-      # Custom paths go into extraConfig
-      extraConfig = {
-        XDG_FUNNY_DIR = "${config.users.users.blade0.home}/Funny";
-        XDG_PROJECTS_DIR = "${config.users.users.blade0.home}/Projects";
-        XDG_ANDROID_DIR = "${config.users.users.blade0.home}/Android";
-      };
     };
 
     programs = {
@@ -123,5 +112,6 @@
   services.flatpak.packages = [
     "com.jeffser.Nocturne" # Nocturne
     "re.sonny.Workbench"
+    "io.gitlab.ilshat_apps.manuscript"
   ];
 }

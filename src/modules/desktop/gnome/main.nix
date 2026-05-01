@@ -29,10 +29,6 @@ let
     passthru.extensionUuid = "forge@jmmaranan.com";
   };
 
-  fake-gnome-terminal = pkgs.writeShellScriptBin "gnome-terminal" ''
-    exec ${pkgs.kitty}/bin/kitty "$@"
-  '';
-
   # Define extensions
   extensions = [
     forge-custom
@@ -182,7 +178,7 @@ in
         ptyxis
         resources
         icon-library
-        nautilus-open-any-terminal
+        #  nautilus-open-any-terminal
         gnome-builder
       ]
       ++ extensions;
@@ -207,7 +203,6 @@ in
 
   services.flatpak.packages = [
     "com.github.tchx84.Flatseal"
-    "app.devsuite.Ptyxis"
   ];
 
   # 3. Declarative GSettings (Dconf) for All Users
@@ -266,5 +261,9 @@ in
         };
       }
     ];
+  };
+  programs.nautilus-open-any-terminal = {
+    enable = true;
+    terminal = "ptyxis";
   };
 }
