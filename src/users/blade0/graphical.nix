@@ -81,7 +81,7 @@
           # [FIX] Load themes into the menu as well, just in case QuickCSS fails.
           themeLinks = [
             "https://codeberg.org/ridge/Discord-Adblock/raw/branch/main/discord-adblock.css"
-            # "https://raw.githubusercontent.com/ricewind012/discord-gnome-theme/master/gnome.theme.css"
+            "https://raw.githubusercontent.com/ricewind012/discord-gnome-theme/master/gnome.theme.css"
             # ↑ broken, hopefully replaced by gord soon
           ];
 
@@ -110,119 +110,6 @@
             };
             memberCount.enable = true;
             showHiddenThings.enable = true;
-            PinDMs = {
-              enable = true;
-              canCollapseDmSection = true;
-              pinOrder = 0;
-
-              # Converted from JSON export
-              # Note: Keys beginning with numbers must be quoted in Nix
-              userBasedCategoryList = {
-                "786127059020808192" = [
-                  {
-                    id = "pxjb5vmmgvq";
-                    name = "anaxort";
-                    color = 3447003;
-                    collapsed = false;
-                    channels = [ "1163390615875235850" ];
-                  }
-                  {
-                    id = "pw400h4v3r8";
-                    name = "pyxaxerei";
-                    color = 10181046;
-                    collapsed = false;
-                    channels = [
-                      "932002355006824518"
-                      "1251984601346474137"
-                      "1076666124596420658"
-                      "1235474431854247947"
-                      "1317442836534136832"
-                      "1406532912115093597"
-                      "1373419992690852033"
-                      "1436806723032842282"
-                      "950102506892042280"
-                      "1370491641739218956"
-                      "1068059647606521897"
-                      "1002319154155622410"
-                      "932155260695379988"
-                      "853881398985490443"
-                      "853859473462394890"
-                      "1007987169777950750"
-                      "1257274200683446304"
-                      "1169986857422028850"
-                      "1125888401720225864"
-                      "932680448784621658"
-                      "996098799418232902"
-                      "1448774106609881143"
-                      "1034497174853128283"
-                      "1446931065846366320"
-                      "1385202673149808673"
-                      "1362263213546147952"
-                      "931433605740240957"
-                      "1344023312254242826"
-                      "1265042253399855134"
-                      "1442531824663396394"
-                      "1080007672545415238"
-                      "993870226259193927"
-                      "1375899970053476554"
-                      "962773292857573458"
-                      "1438120331893149796"
-                      "1320116227359641620"
-                      "1436998598314295370"
-                      "1056652715234701353"
-                      "1065671896017928233"
-                      "1435403641396920423"
-                      "1435038376842760263"
-                      "1149745026650353740"
-                      "1432913066550493316"
-                      "1361256971365519513"
-                      "1377624366581284946"
-                      "1383425235495157860"
-                      "1427872016089874516"
-                      "1425613934219628717"
-                      "1378452184819302534"
-                      "1134586397802635348"
-                      "1161389907844014161"
-                      "1408784983677735035"
-                    ];
-                  }
-                  {
-                    id = "giad3o5lhl9";
-                    name = "kulupei";
-                    color = 15277667;
-                    collapsed = false;
-                    channels = [
-                      "1138946738695180288"
-                      "1396015342270025749"
-                      "1320177024685576242"
-                      "1299480215503896609"
-                    ];
-                  }
-                  {
-                    id = "4f5sbjgmrg9";
-                    name = "wtx";
-                    color = 3066993;
-                    collapsed = true;
-                    channels = [
-                      "1451158271871291585"
-                      "1073688149999501312"
-                      "1093616425198956655"
-                      "942068119499849748"
-                      "1184487132560101396"
-                      "1433110846690824262"
-                      "1412166821091479704"
-                    ];
-                  }
-                  {
-                    id = "ezzyxp82irr";
-                    name = "work-ish";
-                    color = 10070709;
-                    collapsed = true;
-                    channels = [ "1222475248792895550" ];
-                  }
-                ];
-              };
-            };
 
             # [REMOVED] 'noMinSize' is not supported by current Nixcord version.
             # Enable this manually in Vencord settings -> Plugins if needed.
@@ -245,11 +132,12 @@
 
         # [FIX] Added quotes to URLs to ensure CSS validity
         quickCss = ''
-          /* Discord AdBlock */
-          @import url("https://codeberg.org/ridge/Discord-Adblock/raw/branch/main/discord-adblock.css");
-
-          /* Discord Gnome Theme */
-          @import url("https://raw.githubusercontent.com/ricewind012/discord-gnome-theme/master/gnome.theme.css");
+          .bar_c38106:nth-last-child(3) {
+              margin-top: 0px;
+          }
+          :root {
+              --chat-header-right-padding: calc(var(--titlebar-right-spacing) + var(--icon-button-size) * 2 + var(--spacing));
+          }
         '';
       };
     };

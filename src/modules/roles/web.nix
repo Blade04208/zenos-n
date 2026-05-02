@@ -46,11 +46,6 @@ in
           '';
         });
 
-        # This links the manifest to ~/.mozilla/native-messaging-hosts/
-        nativeMessagingHosts = [
-          pkgs.keepassxc
-        ];
-
         policies = {
           ExtensionSettings = builtins.listToAttrs (
             map (ext: {
