@@ -34,6 +34,10 @@
       # url = "path:/home/doromiert/Projects/zerobridge";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    decky-loader = {
+      url = "github:sirdonot/decky-loader-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # [ ZenFS ] Local Input
     zenfs = {
