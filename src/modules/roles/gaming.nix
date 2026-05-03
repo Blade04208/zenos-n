@@ -39,7 +39,7 @@ in
 
   services.decky-loader = {
     enable = true;
-    user = "user"; # Set your actual username here.
+    user = "blade0"; # Set your actual username here.
   };
   # -- VR Configuration --
   # ALVR firewall rules are critical for Quest 3 streaming
