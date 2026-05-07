@@ -13,7 +13,7 @@
       imports = [
         ./dconf.nix
         ./shortcuts.nix
-        inputs.nixcord.homeModules.nixcord
+        ./janitor.nix
       ];
       #home.file.".config/forge/config/windows.json".source = ./resources/windows.json;
 

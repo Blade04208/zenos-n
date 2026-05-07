@@ -34,7 +34,7 @@
     };
 
     xdg.userDirs = {
-      enable = true;
+      enable = false; # NONSTANDARD - CHANGED FROM STANDARD
       createDirectories = true;
 
       # Standard XDG paths
