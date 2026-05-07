@@ -3,6 +3,9 @@
   ...
 }:
 {
+  imports = [
+    ./janitor.nix
+  ];
 
   home-manager.users.blade0 =
     {
@@ -13,7 +16,6 @@
       imports = [
         ./dconf.nix
         ./shortcuts.nix
-        ./janitor.nix
       ];
       #home.file.".config/forge/config/windows.json".source = ./resources/windows.json;
 
