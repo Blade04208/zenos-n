@@ -9,6 +9,12 @@
   environment.systemPackages = with inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}; [
     ironbar
     kitty
+    playerctl
+    vicinae
+    swaynotificationcenter
+    hyprpolkitagent
+    fira-sans
+    nerd-fonts.fira-mono
   ];
 
   # home-manager = {
