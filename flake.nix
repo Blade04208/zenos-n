@@ -178,7 +178,7 @@
                   # This ensures all hosts (laptop, PC, VM) get auto-updates & cleanup.
                   zenos.maintenance = {
                     enable = true;
-                    flakePath = "/home/doromiert/Projects/zenos-n";
+                    flakePath = "/zenos-n";
                   };
 
                   # [LOGIC] Set the system hostname automatically
@@ -226,19 +226,13 @@
 
           ]
           ++ (importDir ./src/modules/core excludeCoreModules)
-          ++ (
-            if desktop != null then
-              [
-                ./src/modules/desktop/${desktop}/main.nix
-                ./src/modules/desktop/${desktop}/styling.nix
-              ]
-            else
-              [ ]
-          )
-          # [UPDATED] Import logic uses the sanitized hostName (e.g. src/hosts/doromi-tul-2)
+          ++ (builtins.concatMap (d: [
+            ./src/modules/desktop/${d}/main.nix
+            ./src/modules/desktop/${d}/styling.nix
+          ]) desktop)
           ++ (importDir (./src/hosts + "/${hostName}") excludeCoreModules)
           ++ (map (user: ./src/users + "/${user}/main.nix") users)
-          ++ (if desktop != null then (map (user: ./src/users + "/${user}/graphical.nix") users) else [ ])
+          ++ (builtins.concatMap (user: map (d: ./src/users + "/${user}/graphical.nix") desktop) users)
           ++ (map (role: ./src/modules/roles/${role}.nix) roles)
           ++ (map (service: ./src/server/${service}.nix) serverServices)
           ++ extraModules;
@@ -260,14 +254,16 @@
           users = [
             "blade0"
           ];
-          desktop = "gnome";
+          desktop = [
+            "gnome"
+            "hyprland"
+          ];
           roles = [
             "web"
             "dev"
             "pipewire"
             "gaming"
             "creative/graphics"
-            "hyprland"
           ];
           # ill change this once i install it for more than testing
           excludeCoreModules = [
