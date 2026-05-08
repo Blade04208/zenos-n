@@ -5,7 +5,7 @@
 
     # [ DUMB JANITOR ]
     dumb = {
-      enable = true;
+      enable = false;
       interval = "5min";
       gracePeriod = 60;
       watchedDirs = [ "/home/blade0/Downloads" ];
