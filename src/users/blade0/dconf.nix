@@ -93,13 +93,11 @@ in
         "firefox.desktop"
         "discord.desktop"
         "org.telegram.desktop.desktop"
-        "figma.desktop"
         "code.desktop"
         "org.gnome.Nautilus.desktop"
-        "com.raggesilver.BlackBox.desktop"
+        "ptyxis.desktop"
         "steam.desktop"
-        "obsidian.desktop"
-        "gemini.desktop"
+        "com.jeffser.Nocturne.desktop"
       ];
     };
     # --- Alphabetical App Grid ---
@@ -109,21 +107,6 @@ in
 
     "org/gnome/shell/extensions/app-hider" = {
       hidden-apps = [ "vesktop.desktop" ];
-    };
-
-    # --- BlackBox Terminal ---
-    "com/raggesilver/BlackBox" = {
-      floating-controls = true;
-      font = "Adwaita Mono 11";
-      show-headerbar = false;
-      terminal-padding = mkTuple [
-        (mkUint32 5)
-        (mkUint32 5)
-        (mkUint32 5)
-        (mkUint32 5)
-      ];
-      window-height = mkUint32 744;
-      window-width = mkUint32 828;
     };
 
     # --- Blur My Shell ---
@@ -159,8 +142,6 @@ in
     };
 
     "org/gnome/shell/extensions/blur-my-shell/panel" = {
-      blur = false;
-      brightness = 0.59999999999999998;
       pipeline = "pipeline_default";
       sigma = 30;
     };
@@ -182,16 +163,6 @@ in
       prefs-open-count = 2;
     };
 
-    # --- Compiz Windows Effect ---
-    "org/gnome/shell/extensions/com/github/hermes83/compiz-windows-effect" = {
-      friction = 4.9000000000000004;
-      last-version = 29;
-      mass = 50.0;
-      resize-effect = true;
-      speedup-factor-divider = 4.7000000000000002;
-      spring-k = 2.2000000000000002;
-    };
-
     # --- Coverflow Alt-Tab ---
     "org/gnome/shell/extensions/coverflowalttab" = {
       desaturate-factor = 0.0;
@@ -204,32 +175,12 @@ in
       use-glitch-effect = true;
     };
 
-    # --- Forge ---
-    "org/gnome/shell/extensions/forge" = {
-      css-last-update = mkUint32 37;
-      dnd-center-layout = "swap";
-      float-always-on-top-enabled = false;
-      focus-border-toggle = false;
-      quick-settings-enabled = false;
-      split-border-toggle = false;
-      stacked-tiling-mode-enabled = false;
-      tabbed-tiling-mode-enabled = false;
-      window-gap-size = mkUint32 5;
-    };
-
     "org/gnome/shell/extensions/gsconnect/preferences" = {
       window-maximized = false;
       window-size = mkTuple [
         945
         478
       ];
-    };
-
-    # --- Hide Top Bar ---
-    "org/gnome/shell/extensions/hidetopbar" = {
-      enable-intellihide = false;
-      mouse-sensitive = true;
-      mouse-sensitive-fullscreen-window = false;
     };
 
     # --- Rounded Corners ---
@@ -253,16 +204,6 @@ in
     "org/gnome/shell/extensions/panel-corners" = {
       panel-corner-radius = 22;
       screen-corner-radius = 22;
-    };
-
-    # --- Quick Settings Tweaks ---
-    "org/gnome/shell/extensions/quick-settings-tweaks" = {
-      datemenu-hide-left-box = false;
-      media-gradient-enabled = false;
-      media-progress-enabled = false;
-      menu-animation-enabled = true;
-      notifications-enabled = false;
-      overlay-menu-enabled = true;
     };
 
     # --- Rounded Window Corners Reborn ---

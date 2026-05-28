@@ -27,9 +27,6 @@
         vesktop
       ];
 
-      # [USER SPECIFIC] VS Code Overrides
-      # This extends the base configuration defined in dev.nix
-
       # [Masking] Create a "Discord" desktop entry that launches Vesktop
       # This ensures discord:// links work and it appears as "Discord" in the launcher.
       xdg.desktopEntries.discord = {

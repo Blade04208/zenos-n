@@ -33,7 +33,7 @@ let
     clipboard-indicator
     notification-timeout
     appindicator
-    mpris-label
+    media-controls
     color-picker
   ]);
 in

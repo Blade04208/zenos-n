@@ -18,7 +18,11 @@
     shell = pkgs.zsh;
     initialPassword = "setmelater";
   };
-
+  nixpkgs.config.allowUnfree = true;
+  environment.systemPackages = with inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}; [
+    bazaar
+    vivaldi
+  ];
   home-manager.users.blade0 = {
 
     # never touch this
@@ -112,6 +116,6 @@
   services.flatpak.packages = [
     "com.jeffser.Nocturne" # Nocturne
     "re.sonny.Workbench"
-    "io.gitlab.ilshat_apps.manuscript"
+    "com.github.IsmaelMartinez.teams_for_linux"
   ];
 }
