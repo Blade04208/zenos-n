@@ -14,14 +14,13 @@
       "wheel"
       "networkmanager"
       "zenos-rebuild"
+      "plugdev"
     ];
     shell = pkgs.zsh;
     initialPassword = "setmelater";
   };
-  nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}; [
     bazaar
-    vivaldi
   ];
   home-manager.users.blade0 = {
 
