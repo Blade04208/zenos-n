@@ -63,7 +63,6 @@
       flake = false;
     };
   };
-
   outputs =
     {
       self,

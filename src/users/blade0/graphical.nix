@@ -5,6 +5,7 @@
 {
   imports = [
     ./janitor.nix
+    ./mtk.nix
   ];
 
   home-manager.users.blade0 =
