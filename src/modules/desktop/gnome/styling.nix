@@ -353,7 +353,7 @@ in
             package = cursorPkg;
           };
 
-          # [UPDATED] Use native package (Assuming it exists in 25.11)
+          # [UPDATED] Use native package (Assuming it exists in 26.05)
           font = {
             name = "Atkinson Hyperlegible Next 11";
             package = pkgs.atkinson-hyperlegible-next;
