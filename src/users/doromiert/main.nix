@@ -26,7 +26,7 @@
   home-manager.users.doromiert = {
 
     # never touch this
-    home.stateVersion = "25.11";
+    home.stateVersion = "26.05";
 
     home.file = {
       ".p10k.zsh".source = ./resources/p10k.zsh;
