@@ -48,8 +48,8 @@
   # [ CPU Microcode ]
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  environment.etc."udev/rules.d/90-disable-touchpad.rules".text = ''
-    SUBSYSTEM=="input", ATTR{name}=="ELAN0B00:00 04F3:3261 Touchpad", RUN+="/bin/sh -c 'echo -n $kernel > /sys/bus/usb/drivers/usb/unbind'"
-  '';
+  #   environment.etc."udev/rules.d/90-disable-touchpad.rules".text = ''
+  #     SUBSYSTEM=="input", ATTR{name}=="ELAN0B00:00 04F3:3261 Touchpad", RUN+="/bin/sh -c 'echo -n $kernel > /sys/bus/usb/drivers/usb/unbind'"
+  #   '';
 
 }

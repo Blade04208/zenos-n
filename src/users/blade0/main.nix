@@ -19,8 +19,9 @@
     shell = pkgs.zsh;
     initialPassword = "setmelater";
   };
-  environment.systemPackages = with inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}; [
+  environment.systemPackages = with pkgs; [
     bazaar
+    btop
   ];
   home-manager.users.blade0 = {
 

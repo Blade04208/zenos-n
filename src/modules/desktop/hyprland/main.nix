@@ -1,12 +1,15 @@
 { pkgs, inputs, ... }:
 {
+  imports = [
+    ./styling.nix
+  ];
   programs.hyprland = {
     enable = true;
     withUWSM = true;
     xwayland.enable = true;
   };
 
-  environment.systemPackages = with inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}; [
+  environment.systemPackages = with pkgs; [
     ironbar
     kitty
     playerctl
@@ -14,8 +17,31 @@
     swaynotificationcenter
     hyprpolkitagent
     fira-sans
+    hyprshot
+    hyprpaper
+    hyprpicker
+    hyprshutdown
     nerd-fonts.fira-mono
   ];
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-hyprland
+      pkgs.xdg-desktop-portal-gnome
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    config = {
+      hyprland.default = [
+        "hyprland"
+        "gtk"
+      ];
+      gnome.default = [
+        "gnome"
+        "gtk"
+      ];
+    };
+  };
 
   # home-manager = {
   #   # Import the ironbar home-manager module so programs.ironbar is available
