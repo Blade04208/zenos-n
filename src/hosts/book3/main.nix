@@ -35,7 +35,7 @@
     graphics = {
       enable = true;
       extraPackages = with pkgs; [
-        intel-media-driver  # iHD: required for 6th gen+, covers all Xe hardware
+        intel-media-driver # iHD: required for 6th gen+, covers all Xe hardware
         libvdpau-va-gl
         # intel-vaapi-driver (i965) is NOT needed for 13th gen — iHD handles everything
       ];
@@ -44,8 +44,8 @@
 
   # [ Environment Variables ]
   environment.variables = {
-    LIBVA_DRIVER_NAME = "iHD";       # Force iHD for VA-API (correct for Iris Xe)
-    MOZ_DISABLE_RDD_SANDBOX = "1";  # Required for Firefox hardware video decode via VAAPI
+    LIBVA_DRIVER_NAME = "iHD"; # Force iHD for VA-API (correct for Iris Xe)
+    MOZ_DISABLE_RDD_SANDBOX = "1"; # Required for Firefox hardware video decode via VAAPI
   };
 
   # [ Nix Binary Caches ]
@@ -79,7 +79,7 @@
 
       # Intel Iris Xe — GuC/HuC submission is required for proper Xe scheduling
       "i915.enable_guc=3"
-      "i915.enable_fbc=1"   # Framebuffer compression — saves memory bandwidth on LPDDR4x
+      "i915.enable_fbc=1" # Framebuffer compression — saves memory bandwidth on LPDDR4x
 
       # Samsung ACPI quirks
       # acpi_osi=Linux: exposes Linux-compatible ACPI tables; fixes backlight/hotkey routing
@@ -104,10 +104,10 @@
     # by pushing cold pages into compressed swap early.
     kernel.sysctl = {
       # ZRAM-first swap policy
-      "vm.swappiness"              = lib.mkForce 130;  # Aggressively prefer ZRAM over eviction
-      "vm.watermark_boost_factor"  = lib.mkForce 0;    # No burst reclaim (reduces latency spikes)
-      "vm.watermark_scale_factor"  = lib.mkForce 125;  # Wider headroom before direct reclaim
-      "vm.page-cluster"            = 0;                # Read single pages (optimal for ZRAM latency)
+      "vm.swappiness" = lib.mkForce 130; # Aggressively prefer ZRAM over eviction
+      "vm.watermark_boost_factor" = lib.mkForce 0; # No burst reclaim (reduces latency spikes)
+      "vm.watermark_scale_factor" = lib.mkForce 125; # Wider headroom before direct reclaim
+      "vm.page-cluster" = 0; # Read single pages (optimal for ZRAM latency)
 
       # NVMe queue depth hint (some kernels ignore this; harmless either way)
       "dev.nvme.0.queue_mode" = "none";
@@ -190,15 +190,12 @@
 
   # [ Sleep Configuration ]
   systemd = {
-    sleep.extraConfig = ''
-      [Sleep]
-      # Galaxy Book3 does not properly support ACPI S3 (deep sleep).
-      # s2idle (Modern Standby / S0ix) is the correct suspend target.
-      SuspendMode=s2idle
-      SuspendState=freeze
-      HibernateMode=platform
-      HibernateState=disk
-    '';
+    sleep.settings.Sleep = {
+      SuspendMode = "s2idle";
+      SuspendState = "freeze";
+      HibernateMode = "platform";
+      HibernateState = "disk";
+    };
 
     # BD_PROCHOT dethrottle — ThinkPad-specific thermal safety mechanism.
     # Samsung Galaxy Book3 does not use BD_PROCHOT via this MSR in the same way.
@@ -218,11 +215,11 @@
   };
 
   environment.systemPackages = with pkgs; [
-    libimobiledevice       # iOS device mounting (optional, remove if unused)
+    libimobiledevice # iOS device mounting (optional, remove if unused)
     libimobiledevice-glue
     # libsmbios removed — Dell/Lenovo SMBIOS utility, irrelevant on Samsung hardware
-    msr-tools              # Useful for reading/debugging MSR state (e.g. RAPL power readings)
-    intel-gpu-tools        # intel_gpu_top, GPU debugging
+    msr-tools # Useful for reading/debugging MSR state (e.g. RAPL power readings)
+    intel-gpu-tools # intel_gpu_top, GPU debugging
     # undervolt removed — not compatible with 13th gen Intel (Raptor Lake)
   ];
 }

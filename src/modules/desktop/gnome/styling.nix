@@ -403,7 +403,7 @@ in
             gtk-theme = "adw-gtk3-dark";
             icon-theme = "Adwaita-hacks";
             cursor-theme = "GoogleDot-Black";
-            font-name = lib.mkForce "Atkinson Hyperlegible Next 11";
+            font-name = "Atkinson Hyperlegible Next 11";
             document-font-name = "Atkinson Hyperlegible Next 11";
             monospace-font-name = "AtkynsonMono NF 11";
           };
