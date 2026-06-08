@@ -117,5 +117,8 @@
     "com.jeffser.Nocturne" # Nocturne
     "re.sonny.Workbench"
     "com.github.IsmaelMartinez.teams_for_linux"
-  ];
+    "com.obsproject.Studio"
+    "io.mrarm.mcpelauncher"
+    "app.zen_browser.zen"
+  ];  
 }

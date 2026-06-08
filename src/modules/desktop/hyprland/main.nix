@@ -10,20 +10,31 @@
   };
 
   environment.systemPackages = with pkgs; [
-    ironbar
+    # backup apps - kitty
     kitty
+    # shell
+    ironbar
+    swaynotificationcenter
     playerctl
     vicinae
-    swaynotificationcenter
+    brightnessctl
+    # hyprutils
     hyprpolkitagent
-    fira-sans
-    hyprshot
     hyprpaper
     hyprpicker
-    hyprshutdown
+    hyprlock
+    # screenshots
+    grim
+    slurp
+    satty
+    # bugfixes - giaselbhbr
+    wl-clip-persist
+    # styling - fira
+    fira-sans
     nerd-fonts.fira-mono
   ];
-
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
   xdg.portal = {
     enable = true;
     extraPortals = [
