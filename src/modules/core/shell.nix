@@ -85,4 +85,6 @@ in
     zenosRebuild
     libnotify
   ];
+
+  security.unprivilegedUsernsClone = true;
 }

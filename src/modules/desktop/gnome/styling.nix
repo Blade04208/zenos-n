@@ -203,16 +203,15 @@ in
   };
 
   # 2. Qt and GTK Styling
-  qt = {
-    enable = true;
-    platformTheme = "gnome";
-    style = "adwaita-dark";
-  };
+  # qt = {
+  #   enable = false;
+  #   platformTheme = "gnome";
+  #   style = "adwaita-dark";
+  # };
 
   environment.sessionVariables = {
     XCURSOR_THEME = "GoogleDot-Black";
     XCURSOR_SIZE = "24";
-    QT_STYLE_OVERRIDE = "adwaita-dark";
     ZENOS_WALLPAPER = "${wallpaperPkg}/share/backgrounds/zenos/default.png";
   };
 
@@ -226,8 +225,8 @@ in
       wallpaperPkg
       gdmLogoPkg # Ensure logo is available system-wide
       adw-gtk3
-      adwaita-qt
-      adwaita-qt6
+ #     adwaita-qt
+ #     adwaita-qt6
       gnome-themes-extra
       # [NOTE] Extension managed externally as requested
       libsForQt5.qt5ct
@@ -403,7 +402,7 @@ in
             gtk-theme = "adw-gtk3-dark";
             icon-theme = "Adwaita-hacks";
             cursor-theme = "GoogleDot-Black";
-            font-name = "Atkinson Hyperlegible Next 11";
+            font-name = lib.mkForce "Atkinson Hyperlegible Next 11";
             document-font-name = "Atkinson Hyperlegible Next 11";
             monospace-font-name = "AtkynsonMono NF 11";
           };
