@@ -62,12 +62,15 @@
       url = "github:rafaelmardojai/firefox-gnome-theme";
       flake = false;
     };
+    vicinae.url = "github:vicinaehq/vicinae";
+      vicinae-extensions.url = "github:vicinaehq/extensions";
   };
   outputs =
     {
       self,
       nixpkgs,
       nixpkgs-unstable,
+      vicinae, vicinae-extensions,
       ...
     }@inputs:
     let
