@@ -25,7 +25,7 @@
 
           # [UPDATED] Use native package (Assuming it exists in 26.05)
           # font = {
-          #   name = lib.mkForce "Fira Sans 11";
+          #   name = lib.mkForce "Fira Sans";
           #   package = lib.mkForce pkgs.fira-sans;
           # };
 

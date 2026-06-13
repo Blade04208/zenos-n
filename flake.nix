@@ -63,14 +63,16 @@
       flake = false;
     };
     vicinae.url = "github:vicinaehq/vicinae";
-      vicinae-extensions.url = "github:vicinaehq/extensions";
+    vicinae-extensions.url = "github:vicinaehq/extensions";
   };
+
   outputs =
     {
       self,
       nixpkgs,
       nixpkgs-unstable,
-      vicinae, vicinae-extensions,
+      vicinae,
+      vicinae-extensions,
       ...
     }@inputs:
     let
