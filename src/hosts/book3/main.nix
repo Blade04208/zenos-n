@@ -59,8 +59,13 @@
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
+    extra-substituters = [
+      "https://vicinae.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
+    ];
   };
-
   boot = {
     kernelPackages = pkgs.linuxPackages_zen; # Zen kernel includes samsung_galaxybook since 6.9
 
