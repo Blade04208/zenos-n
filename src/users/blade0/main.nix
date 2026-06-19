@@ -35,7 +35,7 @@
     xdg.userDirs = {
       enable = true;
       download = config.users.users.blade0.home + "/Downloads";
-      createDirectories = true;
+      createDirectories = false;
     };
 
     programs = {
@@ -120,5 +120,6 @@
     "com.obsproject.Studio"
     "io.mrarm.mcpelauncher"
     "app.zen_browser.zen"
+    "de.haeckerfelix.Shortwave"
   ];  
 }
