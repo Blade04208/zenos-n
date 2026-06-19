@@ -259,6 +259,7 @@
             "blade0"
           ];
           desktop = [
+            "niri"
             "gnome"
             "hyprland"
           ];
