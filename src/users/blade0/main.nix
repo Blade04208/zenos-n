@@ -22,6 +22,7 @@
   environment.systemPackages = with pkgs; [
     bazaar
     btop
+    ungoogled-chromium
   ];
   home-manager.users.blade0 = {
 
@@ -33,7 +34,7 @@
       # ".local/bin".source = ./bin;
     };
     xdg.userDirs = {
-      enable = true;
+      enable = false;
       download = config.users.users.blade0.home + "/Downloads";
       createDirectories = false;
     };
@@ -114,12 +115,12 @@
     };
   };
   services.flatpak.packages = [
-    "com.jeffser.Nocturne" # Nocturne
-    "re.sonny.Workbench"
+    "com.jeffser.Nocturne"
     "com.github.IsmaelMartinez.teams_for_linux"
     "com.obsproject.Studio"
     "io.mrarm.mcpelauncher"
     "app.zen_browser.zen"
-    "de.haeckerfelix.Shortwave"
-  ];  
+    "org.kde.iconexplorer"
+    "io.github.v81d.Wattage"
+  ];
 }

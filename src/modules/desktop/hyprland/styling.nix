@@ -15,19 +15,19 @@
 
         gtk = {
           enable = true;
-          # iconTheme = {
-          #   name = "Adwaita-hacks";
-          # };
+          iconTheme = {
+            name = lib.mkForce "NEUX";
+          };
           # cursorTheme = {
           #   name = "GoogleDot-Black";
           #   size = 24;
           # };
 
           # [UPDATED] Use native package (Assuming it exists in 26.05)
-          # font = {
-          #   name = lib.mkForce "Fira Sans";
-          #   package = lib.mkForce pkgs.fira-sans;
-          # };
+          font = {
+            name = lib.mkForce "Fira Sans";
+            package = lib.mkForce pkgs.fira-sans;
+          };
 
           # gtk3.extraConfig = {
           #   gtk-theme-name = "adw-gtk3-dark";
@@ -51,11 +51,11 @@
             color-scheme = "prefer-dark";
             accent-color = "purple";
             # gtk-theme = "adw-gtk3-dark";
-            # icon-theme = "Adwaita-hacks";
+            icon-theme = lib.mkForce "NEUX";
             # cursor-theme = "GoogleDot-Black";
-            # font-name = lib.mkForce "Fira Sans 11";
-            # document-font-name = lib.mkForce "Fira Sans 11";
-            # monospace-font-name = lib.mkForce "FiraMono Nerd Font 11";
+            font-name = lib.mkForce "Fira Sans 11";
+            document-font-name = lib.mkForce "Fira Sans 11";
+            monospace-font-name = lib.mkForce "FiraMono Nerd Font 11";
           };
         };
 
@@ -63,8 +63,8 @@
         #   "${pkgs.adw-gtk3}/share/themes/adw-gtk3-dark";
         # home.file.".local/share/icons/Adwaita-hacks".source = "${iconPkg}/share/icons/Adwaita-hacks";
 
-        xdg.configFile."gtk-4.0/gtk.css".source = ./gtk.css;
-        xdg.configFile."gtk-3.0/gtk.css".source = ./gtk.css;
+        xdg.configFile."gtk-4.0/gtk.css".source = ./gtk4.css;
+        xdg.configFile."gtk-3.0/gtk.css".source = ./gtk3.css;
 
       }
     )

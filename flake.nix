@@ -10,10 +10,10 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    ironbar = {
-      url = "github:JakeStanger/ironbar";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #  ironbar = {
+    #    url = "github:JakeStanger/ironbar";
+    #    inputs.nixpkgs.follows = "nixpkgs";
+    #  };
     nixos-hardware.url = "github:nixos/nixos-hardware";
     nix-gaming.url = "github:fufexan/nix-gaming";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
@@ -259,7 +259,6 @@
             "blade0"
           ];
           desktop = [
-            "niri"
             "gnome"
             "hyprland"
           ];
