@@ -9,14 +9,24 @@
         border-radius: 10px;
     }
 
-    ptyxistab {
+    splitbutton separator {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    window.window {
+        /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.125) 109.52%),
+                    linear-gradient(rgba(81, 81, 81, 0.3), rgba(81, 81, 81, 0.3)),
+                  rgba(40, 40, 40, 0.4); */
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 8.83%, rgba(0, 0, 0, 0.125) 109.52%), linear-gradient(#282828CC), linear-gradient(#51515180);
+
+        box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.077);
+        border-radius: 10px;
+    }
+
+    tabview {
         background: rgba(0, 0, 0, 0.4);
         margin: 0px 3px 3px;
         border-radius: 7px;
-    }
-
-    splitbutton separator {
-        background: rgba(255, 255, 255, 0.1);
     }
 
     headerbar,
@@ -45,6 +55,7 @@
         border-radius: 10px 0px 0px 0px;
         border: 1px solid rgba(0, 0, 0, 0.2);
         box-shadow: inset 0px 4px 8px -2px rgba(0, 0, 0, 0.2);
+        margin: 0px;
     }
 
     menubutton button,
@@ -54,8 +65,37 @@
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.25) 40%, rgba(0, 0, 0, 0.4) 65%, rgba(0, 0, 0, 0.4) 75%, rgba(0, 0, 0, 0.25));
         border: 1px solid rgba(7, 7, 7, 0.5);
         border-radius: 5px;
-        box-shadow: 0px 1px 1.4px 0px #00000033 inset, 0px 1px 0px 0px #FFFFFF10;
+        box-shadow: 0px 1px 1.4px 0px #00000033 inset, 1;
 
+    }
+
+    combobox>box>* {
+        background: transparent;
+        box-shadow: none;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0px;
+        transition: background 0.3s ease;
+    }
+
+    combobox>box>*:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+
+    combobox>box>*:last-child {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border-left: 0px;
+    }
+
+    combobox>box>*:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+
+    entry {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.28) -37.5%, rgba(0, 0, 0, 0.3) -8.1%, rgba(0, 0, 0, 0.3) 12.06%, rgba(0, 0, 0, 0.239453) 51.41%, rgba(0, 0, 0, 0.128) 80.34%, rgba(0, 0, 0, 0.176364) 110.71%), #7272724D;
+        box-shadow: 0px 1px 2px 1px #00000033 inset, 0px 1px 0px 0px #FFFFFF10;
     }
 
     splitbutton>button,
