@@ -81,9 +81,9 @@
             systemd = {
               enable = true;
               autoStart = true;
-              environment = {
-                USE_LAYER_SHELL = 1;
-              };
+              # environment = {
+              #   USE_LAYER_SHELL = 1;
+              # };
             };
             # Extensions installed declaratively.
             # IMPORTANT: when installed this way, vicinae assigns provider keys in the
