@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-   # chaotic.url = "github:chaotic-cx/nyx";
+    chaotic.url = "github:chaotic-cx/nyx";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
@@ -16,7 +16,7 @@
     #  };
     nixos-hardware.url = "github:nixos/nixos-hardware";
     nix-gaming.url = "github:fufexan/nix-gaming";
-    # jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
+    jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
 
     # vsc-extensions.url = "github:nix-community/nix-vscode-extensions";
     # nixcord.url = "github:kaylorben/nixcord";
@@ -64,6 +64,7 @@
     # };
     vicinae.url = "github:vicinaehq/vicinae";
     vicinae-extensions.url = "github:vicinaehq/extensions";
+    nimbus.url = "file:/home/blade0/Projects/nimbus";
   };
 
   outputs =
