@@ -39,7 +39,7 @@ let
 in
 {
   imports = [
-    ./styling.nix
+    # ./styling.nix
   ];
 
   # [FIX] Portal Configuration

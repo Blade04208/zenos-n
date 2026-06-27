@@ -262,7 +262,6 @@
           ];
           desktop = [
             "gnome"
-            "hyprland"
           ];
           roles = [
             "web"
