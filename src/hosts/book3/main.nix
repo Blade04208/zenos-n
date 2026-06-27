@@ -59,6 +59,7 @@
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
+    trusted-users = [ "root" "blade0" "@wheel" ];
     extra-substituters = [
       "https://vicinae.cachix.org"
     ];

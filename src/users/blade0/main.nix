@@ -25,7 +25,6 @@
     ungoogled-chromium
   ];
   home-manager.users.blade0 = {
-
     # never touch this
     home.stateVersion = "26.05";
 

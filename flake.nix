@@ -64,7 +64,8 @@
     # };
     vicinae.url = "github:vicinaehq/vicinae";
     vicinae-extensions.url = "github:vicinaehq/extensions";
-    nimbus.url = "file:/home/blade0/Projects/nimbus";
+    nimbus.url = "path:/home/blade0/Projects/nimbus";
+    neux.url = "path:/home/blade0/Projects/NEUX";
   };
 
   outputs =
@@ -278,6 +279,7 @@
           extraModules = [
             inputs.nixos-hardware.nixosModules.common-cpu-intel
             inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+            inputs.neux.nixosModules.default
           ];
         };
       };
