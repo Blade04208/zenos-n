@@ -38,9 +38,6 @@ let
   ]);
 in
 {
-  imports = [
-    # ./styling.nix
-  ];
 
   # [FIX] Portal Configuration
   # This fixes the VS Code freeze and PWA crashes on file picker.
