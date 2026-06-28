@@ -16,6 +16,7 @@
       imports = [
         ./dconf.nix
         ./shortcuts.nix
+        inputs.neux.homeManagerModules.default
       ];
       #home.file.".config/forge/config/windows.json".source = ./resources/windows.json;
 

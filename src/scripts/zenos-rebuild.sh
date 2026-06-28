@@ -65,6 +65,7 @@ FLAKE_PATH=""
 FORCE_HOST=""
 AUTO_REBOOT=false
 AUTO_LOGOUT=false
+FAST=false
 
 # Argument Parsing
 while [[ $# -gt 0 ]]; do
@@ -86,10 +87,13 @@ while [[ $# -gt 0 ]]; do
         AUTO_LOGOUT=true
         shift
         ;;
+        -f|--fast)
+        FAST=true
+        shift
+        ;;
         *)
-        # Pass unknown args to nixos-rebuild eventually? 
-        # For now, we assume simple usage.
-        break
+        echo -e "${RED}[!] Unknown argument: $1${NC}"
+        exit 1
         ;;
     esac
 done
@@ -127,6 +131,9 @@ echo -e "${BLUE}========================================${NC}"
 echo -e "  ${GREEN}ZenOS Rebuild${NC}"
 echo -e "  Target: ${YELLOW}${FLAKE_URI}${NC}"
 echo -e "  Optimization: ${YELLOW}-j${MAX_JOBS} -c${CORES_PER_JOB}${NC}"
+if [ "$FAST" = true ]; then
+    echo -e "  Mode: ${YELLOW}--fast (skipping Nix tooling rebuild)${NC}"
+fi
 if [ "$AUTO_REBOOT" = true ]; then
     echo -e "  Post-Action: ${RED}AUTO-REBOOT ENABLED${NC}"
 elif [ "$AUTO_LOGOUT" = true ]; then
@@ -137,6 +144,10 @@ echo -e "${BLUE}========================================${NC}"
 # Temporarily disable 'set -e' to capture exit code manually
 set +e
 
+# Build fast flag conditionally
+FAST_FLAG=""
+[ "$FAST" = true ] && FAST_FLAG="--fast"
+
 # Run the build directly.
 sudo nixos-rebuild switch \
     --flake "$FLAKE_URI" \
@@ -144,7 +155,8 @@ sudo nixos-rebuild switch \
     --print-build-logs \
     --option max-jobs "$MAX_JOBS" \
     --option cores "$CORES_PER_JOB" \
-    --option accept-flake-config true
+    --option accept-flake-config true \
+    $FAST_FLAG
 
 EXIT_CODE=$?
 
