@@ -24,6 +24,10 @@
     btop
     ungoogled-chromium
   ];
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "pnpm-10.29.2"
+  ];
   home-manager.users.blade0 = {
     # never touch this
     home.stateVersion = "26.05";

@@ -25,7 +25,7 @@
   # This allows graphical.nix to extend the configuration (e.g. adding Vim) cleanly.
   home-manager.sharedModules = [
     {
-      programs.vscode = {
+      programs.vscode.profiles.default = {
         enable = true;
         package = (
           pkgs.vscode.override {

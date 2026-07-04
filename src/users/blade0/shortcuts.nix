@@ -138,7 +138,7 @@
   };
 
   # --- VS Code Keybindings ---
-  programs.vscode.keybindings = [
+  programs.vscode.profiles.default.keybindings = [
     # NAVIGATION
     {
       key = "ctrl+shift+a";

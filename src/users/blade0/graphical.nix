@@ -16,7 +16,6 @@
       imports = [
         ./dconf.nix
         ./shortcuts.nix
-        inputs.neux.homeManagerModules.default
       ];
       #home.file.".config/forge/config/windows.json".source = ./resources/windows.json;
 
@@ -24,7 +23,7 @@
       home.packages = with pkgs; [
         telegram-desktop
         # [P13.D] Ensure formatter is available for the LSP
-        nixfmt-rfc-style
+        nixfmt
         vesktop
       ];
 

@@ -10,10 +10,6 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    #  ironbar = {
-    #    url = "github:JakeStanger/ironbar";
-    #    inputs.nixpkgs.follows = "nixpkgs";
-    #  };
     nixos-hardware.url = "github:nixos/nixos-hardware";
     nix-gaming.url = "github:fufexan/nix-gaming";
     jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
@@ -62,9 +58,6 @@
     #   url = "github:rafaelmardojai/firefox-gnome-theme";
     #   flake = false;
     # };
-    vicinae.url = "github:vicinaehq/vicinae";
-    vicinae-extensions.url = "github:vicinaehq/extensions";
-    nimbus.url = "path:/home/blade0/Projects/nimbus";
     neux.url = "path:/home/blade0/Projects/NEUX";
   };
 
@@ -73,8 +66,6 @@
       self,
       nixpkgs,
       nixpkgs-unstable,
-      vicinae,
-      vicinae-extensions,
       ...
     }@inputs:
     let
@@ -261,6 +252,7 @@
             "blade0"
           ];
           desktop = [
+            "hyprland"
             "gnome"
           ];
           roles = [

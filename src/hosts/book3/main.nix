@@ -11,8 +11,8 @@
   #  8GB LPDDR4x · 256GB NVMe · Wi-Fi 6 (AX201) · 15.6" FHD
   # ============================================================================
 
-  services.gnome.tracker-miners.enable = false;
-  services.gnome.tracker.enable = false;
+  services.gnome.localsearch.enable = false;
+  services.gnome.tinysparql.enable = false;
 
   # scx_lavd is well-suited for asymmetric P+E core topologies like the i5-1335U
   services.scx = {
