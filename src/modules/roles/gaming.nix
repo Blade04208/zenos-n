@@ -35,12 +35,6 @@ in
       proton-ge-bin
     ];
   };
-  imports = [ inputs.decky-loader.nixosModules.default ];
-
-  services.decky-loader = {
-    enable = true;
-    user = "blade0"; # Set your actual username here.
-  };
   # -- VR Configuration --
   # ALVR firewall rules are critical for Quest 3 streaming
 

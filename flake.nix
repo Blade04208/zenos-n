@@ -30,11 +30,6 @@
       # url = "path:/home/doromiert/Projects/zerobridge";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    decky-loader = {
-      url = "github:sirdonot/decky-loader-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # [ ZenFS ] Local Input
     zenfs = {
       url = "github:doromiert/zenfs";
@@ -58,7 +53,11 @@
     #   url = "github:rafaelmardojai/firefox-gnome-theme";
     #   flake = false;
     # };
-    neux.url = "path:/home/blade0/Projects/NEUX";
+    neux = {
+      url = "path:/home/blade0/Projects/NEUX";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs =
