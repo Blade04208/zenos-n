@@ -25,11 +25,6 @@
     ungoogled-chromium
   ];
 
-  services.tailscale = {
-    # Enable tailscale at startup
-    enable = true;
-  };
-
   nixpkgs.config.permittedInsecurePackages = [
     "pnpm-10.29.2"
   ];

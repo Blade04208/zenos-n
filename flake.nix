@@ -264,6 +264,7 @@
           # ill change this once i install it for more than testing
           excludeCoreModules = [
             "syncthing"
+            "misc-services"
           ];
           extraModules = [
             inputs.nixos-hardware.nixosModules.common-cpu-intel
