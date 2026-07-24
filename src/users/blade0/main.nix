@@ -25,6 +25,11 @@
     ungoogled-chromium
   ];
 
+  services.tailscale = {
+    # Enable tailscale at startup
+    enable = true;
+  };
+
   nixpkgs.config.permittedInsecurePackages = [
     "pnpm-10.29.2"
   ];
@@ -118,7 +123,7 @@
     };
   };
   services.flatpak.packages = [
-    "com.jeffser.Nocturne"
+    "io.m51.Gelly"
     "com.github.IsmaelMartinez.teams_for_linux"
     "com.obsproject.Studio"
     "io.mrarm.mcpelauncher"
