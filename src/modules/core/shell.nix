@@ -10,7 +10,7 @@ let
 
   # [ ACTION ] Import P10k Config
   # We read the file content directly into a store file
-  p10kConfig = pkgs.writeText "p10k.zsh" (builtins.readFile ../../../resources/shell/p10k.zsh);
+  p10kConfig = pkgs.writeText "headline.zsh-theme" (builtins.readFile ../../../resources/shell/headline/headline.zsh-theme);
 
 in
 {
@@ -28,7 +28,7 @@ in
   users.groups.zenos-rebuild = { };
 
   # [ ACTION ] Map the config to a global location
-  environment.etc."zsh/p10k.zsh".source = p10kConfig;
+  environment.etc."zsh/headline.zsh-theme".source = p10kConfig;
 
   programs.zsh = {
     enable = true;
@@ -57,14 +57,10 @@ in
       bindkey '^[[1;5C' forward-word
       bindkey '^[[1;5D' backward-word
 
-      # P10k instant prompt logic for performance
-      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-          source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-      fi
-
+      
       # [FIX] Source the system-wide config instead of the user one
       # We check if the global config exists and source it
-      [[ ! -f /etc/zsh/p10k.zsh ]] || source /etc/zsh/p10k.zsh
+      [[ ! -f /etc/zsh/headline.zsh-theme ]] || source /etc/zsh/headline.zsh-theme
     '';
 
   };
