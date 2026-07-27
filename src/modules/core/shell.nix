@@ -75,7 +75,6 @@ in
     eza
     fzf
     tree
-    zsh-powerlevel10k
 
     tmux
     zenosRebuild

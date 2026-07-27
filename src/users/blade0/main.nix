@@ -23,6 +23,8 @@
     bazaar
     btop
     ungoogled-chromium
+    fira-code
+    ghostty
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
@@ -33,7 +35,6 @@
     home.stateVersion = "26.05";
 
     home.file = {
-      ".p10k.zsh".source = ./resources/p10k.zsh;
       # ".local/bin".source = ./bin;
     };
     xdg.userDirs = {
@@ -82,13 +83,6 @@
           enable = true;
           plugins = [
             { name = "zsh-users/zsh-autosuggestions"; }
-            {
-              name = "romkatv/powerlevel10k";
-              tags = [
-                "as:theme"
-                "depth:1"
-              ];
-            }
           ];
         };
 
