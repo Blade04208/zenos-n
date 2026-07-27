@@ -16,7 +16,7 @@
       "zenos-rebuild"
       "plugdev"
     ];
-    shell = pkgs.zsh;
+    shell = pkgs.fish;
     initialPassword = "setmelater";
   };
   environment.systemPackages = with pkgs; [
@@ -43,6 +43,15 @@
       createDirectories = false;
     };
 
+    neux = {
+      favorites = [
+        "app.zen_browser.zen"
+        "org.gnome.Nautilus"
+        "org.gnome.Ptyxis"
+        "dev.zed.zed"
+      ];
+    };
+
     programs = {
 
       direnv = {
@@ -50,13 +59,9 @@
         nix-direnv.enable = true;
       };
 
-      zsh = {
+      fish = {
 
         enable = true;
-        enableCompletion = true;
-        autosuggestion.enable = true;
-        syntaxHighlighting.enable = true;
-
         # [P13.9] User-Specific Tools
         # Removed CD shortcuts as Zoxide handles navigation
         shellAliases = {
@@ -76,26 +81,12 @@
           # Networking
           myip = "curl ifconfig.me";
         };
-
-        history.size = 10000;
-
-        zplug = {
-          enable = true;
-          plugins = [
-            { name = "zsh-users/zsh-autosuggestions"; }
-          ];
-        };
-
-        initContent = ''
-          bindkey "''${key[Up]}" up-line-or-search
-          bindkey "''${key[Down]}" down-line-or-search
-        '';
       };
 
       zoxide = {
 
         enable = true;
-        enableZshIntegration = true;
+        enableFishIntegration = true;
       };
 
       git = {
@@ -118,6 +109,5 @@
     "io.mrarm.mcpelauncher"
     "app.zen_browser.zen"
     "org.kde.iconexplorer"
-    "io.github.v81d.Wattage"
   ];
 }

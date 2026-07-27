@@ -26,30 +26,6 @@ notify() {
     fi
 }
 
-# --- 1. Tmux Safety Check ---
-# If we are not inside tmux, re-launch self inside tmux
-if [ -z "$TMUX" ]; then
-    echo -e "${YELLOW}[Safety] Not in Tmux. Launching safe-mode session...${NC}"
-    
-    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
-        exec tmux attach-session -t "$SESSION_NAME"
-    else
-        # Create detached session first to configure it
-        tmux new-session -d -s "$SESSION_NAME"
-        
-        # Enable Mouse (Scrolling) and increase History Limit
-        tmux set-option -t "$SESSION_NAME" mouse on
-        tmux set-option -t "$SESSION_NAME" history-limit 50000
-        
-        # Send the command to the session
-        # We pass "$@" to ensure flags like -r or -l are preserved inside the session
-        tmux send-keys -t "$SESSION_NAME" "bash $0 $@; echo -e '\nPress Enter to exit...'; read; exit" C-m
-        
-        # Attach to the configured session
-        exec tmux attach-session -t "$SESSION_NAME"
-    fi
-fi
-
 # --- 2. Resource Optimization ---
 # Calculate cores to prevent UI freeze during heavy compiles
 TOTAL_CORES=$(nproc)
@@ -146,7 +122,7 @@ set +e
 
 # Build fast flag conditionally
 FAST_FLAG=""
-[ "$FAST" = true ] && FAST_FLAG="--fast"
+[ "$FAST" = true ] && FAST_FLAG="--no-reexec"
 
 # Run the build directly.
 sudo nixos-rebuild switch \
