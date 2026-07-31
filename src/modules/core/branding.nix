@@ -10,7 +10,7 @@
 
 let
   # --- Release Configuration ---
-  releaseType = "beta";
+  releaseType = "stable";
   baseVersion = "1.0N";
 
   icon = if deviceIcon != null then deviceIcon else "negzero";

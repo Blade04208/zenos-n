@@ -24,7 +24,7 @@
   hardware = {
     # Galaxy Book3 (non-360) is not a 2-in-1, but still exposes an ambient
     # light sensor via IIO — keep enabled for auto-brightness if your DE supports it.
-    sensor.iio.enable = true;
+    sensor.iio.enable = false;
 
     bluetooth = {
       enable = true;
@@ -221,8 +221,8 @@
   };
 
   environment.systemPackages = with pkgs; [
-    libimobiledevice # iOS device mounting (optional, remove if unused)
-    libimobiledevice-glue
+    # libimobiledevice # iOS device mounting (optional, remove if unused)
+    # libimobiledevice-glue
     # libsmbios removed — Dell/Lenovo SMBIOS utility, irrelevant on Samsung hardware
     msr-tools # Useful for reading/debugging MSR state (e.g. RAPL power readings)
     intel-gpu-tools # intel_gpu_top, GPU debugging

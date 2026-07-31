@@ -269,7 +269,6 @@
           extraModules = [
             inputs.nixos-hardware.nixosModules.common-cpu-intel
             inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-            inputs.neux.nixosModules.default
           ];
         };
       };

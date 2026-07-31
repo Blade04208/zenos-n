@@ -24,7 +24,7 @@
     btop
     ungoogled-chromium
     fira-code
-    ghostty
+    micro
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
@@ -43,14 +43,18 @@
       createDirectories = false;
     };
 
-    neux = {
-      favorites = [
-        "app.zen_browser.zen"
-        "org.gnome.Nautilus"
-        "org.gnome.Ptyxis"
-        "dev.zed.zed"
-      ];
-    };
+      imports = [ inputs.neux.homeManagerModules.default ];
+      neux = {
+        wm = "hyprland";
+        favorites = [
+          "app.zen_browser.zen"
+          "org.gnome.Nautilus"
+          "org.gajim.Gajim"
+          "io.m51.Gelly"
+          "org.gnome.Ptyxis"
+          "dev.zed.Zed"
+        ];
+      };
 
     programs = {
 
@@ -79,7 +83,8 @@
           dr = "direnv reload";
 
           # Networking
-          myip = "curl ifconfig.me";
+          myip = "fastfetch -l none -s localip:publicip";
+          up = "fastfetch -l none -s uptime";
         };
       };
 
