@@ -19,12 +19,15 @@
     shell = pkgs.fish;
     initialPassword = "setmelater";
   };
+  nixpkgs.overlays = [ inputs.helium-flake.overlays.default ];
   environment.systemPackages = with pkgs; [
     bazaar
     btop
     ungoogled-chromium
     fira-code
     micro
+    helium
+    inputs.swisstag.packages.${pkgs.system}.default
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
@@ -43,18 +46,18 @@
       createDirectories = false;
     };
 
-      imports = [ inputs.neux.homeManagerModules.default ];
-      neux = {
-        wm = "hyprland";
-        favorites = [
-          "app.zen_browser.zen"
-          "org.gnome.Nautilus"
-          "org.gajim.Gajim"
-          "io.m51.Gelly"
-          "org.gnome.Ptyxis"
-          "dev.zed.Zed"
-        ];
-      };
+    imports = [ inputs.neux.homeManagerModules.default ];
+    neux = {
+      wm = "hyprland";
+      favorites = [
+        "app.zen_browser.zen"
+        "org.gnome.Nautilus"
+        "org.gajim.Gajim"
+        "io.m51.Gelly"
+        "org.gnome.Ptyxis"
+        "dev.zed.Zed"
+      ];
+    };
 
     programs = {
 

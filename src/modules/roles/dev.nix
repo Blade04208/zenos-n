@@ -4,7 +4,7 @@
 {
   environment.systemPackages = [
     pkgs.nixd
-    pkgs.nixfmt-rfc-style
+    pkgs.nixfmt
     pkgs.android-tools
     pkgs.scrcpy
     pkgs.distrobox

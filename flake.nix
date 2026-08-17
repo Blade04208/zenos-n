@@ -24,7 +24,7 @@
     };
     # illogical-impulse.url = "github:soymou/illogical-flake";
 
-    # swisstag.url = "github:doromiert/swisstag";
+    swisstag.url = "github:doromiert/swisstag";
     zbridge = {
       url = "github:doromiert/zerobridge";
       # url = "path:/home/doromiert/Projects/zerobridge";
@@ -58,6 +58,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
+    helium-flake.url = "github:oxcl/nix-flake-helium-browser";
+    helium-flake.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -102,11 +105,11 @@
             defaultLocale = "pl_PL.UTF-8";
             kbLayout = "pl";
           },
-          mainUser ? "doromiert",
+          mainUser ? "blade0",
           extraModules ? [ ],
           desktop ? null,
           excludeCoreModules ? [ ],
-          users ? [ "doromiert" ],
+          users ? [ "blade0" ],
           roles ? [ ],
           serverServices ? [ ],
         }:
@@ -180,10 +183,13 @@
                   # [LOGIC] Set the system hostname automatically
                   networking.hostName = hostName;
 
-                  nix.settings.experimental-features = [
-                    "nix-command"
-                    "flakes"
-                  ];
+                  nix.settings = {
+                    experimental-features = [
+                      "nix-command"
+                      "flakes"
+                    ];
+                    pure-eval = false;
+                  };
                   nixpkgs.config.allowUnfree = true;
 
                   mainUser = lib.mkDefault mainUser;
@@ -260,6 +266,7 @@
             "pipewire"
             "gaming"
             "creative/graphics"
+            "mpd"
           ];
           # ill change this once i install it for more than testing
           excludeCoreModules = [

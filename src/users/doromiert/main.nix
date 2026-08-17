@@ -10,6 +10,7 @@
   users.users.doromiert = {
     isNormalUser = true;
     description = "doromiert";
+    group = "nogroup";
     extraGroups = [
       "wheel"
       "networkmanager"

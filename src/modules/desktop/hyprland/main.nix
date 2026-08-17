@@ -1,6 +1,4 @@
 { pkgs, inputs, ... }:
 {
-  home-manager.sharedModules = [
-    inputs.neux.homeManagerModules.default
-  ];
+  imports = [ inputs.neux.nixosModules.default ];
 }

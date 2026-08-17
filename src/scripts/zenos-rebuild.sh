@@ -63,6 +63,10 @@ while [[ $# -gt 0 ]]; do
         AUTO_LOGOUT=true
         shift
         ;;
+        -s|--shutdown)
+        AUTO_SHUTDOWN=true
+        shift
+        ;;
         -f|--fast)
         FAST=true
         shift
@@ -157,6 +161,12 @@ if [ $EXIT_CODE -eq 0 ]; then
         sleep 3
         # Attempt to terminate the current session gracefully via systemd
         loginctl terminate-session "${XDG_SESSION_ID:-self}" || kill -9 -1
+    elif [ "$AUTO_SHUTDOWN" = true ]; then
+        echo -e "${YELLOW}[!] SHUTTING DOWN IN 3 SECONDS... (Ctrl+C to cancel)${NC}"
+        notify "System" "Shutting down in 3 seconds..." "critical"
+        sleep 3
+        # Attempt to terminate the current session gracefully via systemd
+        sudo systemctl poweroff
     fi
 
 elif [ $EXIT_CODE -eq 130 ]; then
