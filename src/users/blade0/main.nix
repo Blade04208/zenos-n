@@ -50,7 +50,7 @@
     neux = {
       wm = "hyprland";
       favorites = [
-        "app.zen_browser.zen"
+        "helium"
         "org.gnome.Nautilus"
         "org.gajim.Gajim"
         "io.m51.Gelly"
@@ -115,7 +115,6 @@
     "com.github.IsmaelMartinez.teams_for_linux"
     "com.obsproject.Studio"
     "io.mrarm.mcpelauncher"
-    "app.zen_browser.zen"
     "org.kde.iconexplorer"
   ];
 }

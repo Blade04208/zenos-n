@@ -59,14 +59,15 @@
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     ];
-    trusted-users = [ "root" "blade0" "@wheel" ];
-    extra-substituters = [
-      "https://vicinae.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
+    trusted-users = [
+      "root"
+      "blade0"
+      "@wheel"
     ];
   };
+
+  neux.binaryCaches.enable = true;
+  
   boot = {
     kernelPackages = pkgs.linuxPackages_zen; # Zen kernel includes samsung_galaxybook since 6.9
 
@@ -103,6 +104,7 @@
     # in case dracut or initrd loads i915 before cmdline params apply.
     extraModprobeConfig = ''
       options i915 enable_fbc=1 enable_guc=3
+      options snd_hda_intel power_save=1 power_save_controller=Y
     '';
 
     # [ Memory Pressure Tuning ]
@@ -139,8 +141,18 @@
     # to GNOME/KDE and userspace tools.
     # NOTE: power-profiles-daemon CONFLICTS with throttled.
     # If you enable throttled below, set this to false.
-    power-profiles-daemon.enable = true;
-
+    power-profiles-daemon.enable = false;
+    tlp = {
+      enable = true;
+      settings = {
+        CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+        CPU_HWP_DYN_BOOST_ON_BAT = 0;
+        WIFI_PWR_ON_BAT = "on"; # iwlwifi power saving
+        PCIE_ASPM_ON_BAT = "powersupersave";
+        NVMe_POWER_MGMT_ON_BAT = "min_power";
+        USB_AUTOSUSPEND = 1;
+      };
+    };
     # throttled (lenovo-throttling-fix) can set RAPL power limits via MSR even on
     # non-ThinkPad hardware, but its Samsung EC integration is nonexistent.
     # Use it only for RAPL TDP capping — ignore the [UNDERVOLT] section entirely,
@@ -219,7 +231,7 @@
       };
     };
   };
-
+  powerManagement.powertop.enable = true;
   environment.systemPackages = with pkgs; [
     # libimobiledevice # iOS device mounting (optional, remove if unused)
     # libimobiledevice-glue

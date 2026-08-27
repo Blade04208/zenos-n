@@ -266,11 +266,11 @@
             "pipewire"
             "gaming"
             "creative/graphics"
-            "mpd"
+            "virtualization"
+            # "mpd"
           ];
           # ill change this once i install it for more than testing
           excludeCoreModules = [
-            "syncthing"
             "misc-services"
           ];
           extraModules = [
