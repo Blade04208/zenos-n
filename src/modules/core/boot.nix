@@ -1,6 +1,10 @@
 {
   pkgs,
   lib,
+  useLuks ? false,
+  luksDeviceName ? "cryptroot",
+  rootUUID ? "ROOT_UUID_PLACEHOLDER",
+  isVM ? false,
   ...
 }:
 
@@ -18,6 +22,14 @@ in
     consoleLogLevel = 0;
     initrd.verbose = false;
 
+    initrd.availableKernelModules = lib.mkIf useLuks [
+      "cryptsetup"
+    ];
+
+    initrd.kernelModules = lib.mkIf useLuks [
+      "dm_mod"
+    ];
+
     kernelParams = [
       "quiet"
       "splash"
@@ -27,6 +39,10 @@ in
       "rd.udev.log_level=3"
       "udev.log_priority=3"
     ];
+
+    initrd.luks.devices = lib.mkIf useLuks {
+      ${luksDeviceName}.device = "/dev/disk/by-uuid/${rootUUID}";
+    };
 
     loader = {
       # [ TIMEOUT ] Set to 0 to hide systemd-boot and boot immediately
@@ -40,15 +56,15 @@ in
       };
 
       # 2. Prevent NixOS from fighting rEFInd for the #1 Boot Order slot
-      efi = {
+      efi = lib.mkIf (!isVM) {
         canTouchEfiVariables = false;
         efiSysMountPoint = "/boot";
       };
     };
   };
 
-  # Activation Scripts
-  system.activationScripts = {
+  # Activation Scripts (skipped for VMs — no rEFInd needed)
+  system.activationScripts = lib.mkIf (!isVM) {
 
     # A. Unattended rEFInd Installation
     installRefind = {
@@ -104,11 +120,11 @@ in
     };
   };
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = lib.mkIf (!isVM) (with pkgs; [
     refind
     efibootmgr
     python3
     gptfdisk
     gnused
-  ];
+  ]);
 }

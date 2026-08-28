@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, mainUser, ... }:
 
 let
   # Define custom Forge extension from local precompiled resources
@@ -56,7 +56,13 @@ in
 
   # 1. Core Desktop Services
   services = {
-    displayManager.gdm.enable = true;
+    displayManager = {
+      gdm.enable = true;
+      autoLogin = {
+        enable = true;
+        user = mainUser;
+      };
+    };
     desktopManager.gnome.enable = true;
     udev.packages = with pkgs; [ gnome-settings-daemon ];
 

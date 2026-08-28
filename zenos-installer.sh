@@ -51,9 +51,15 @@ fi
 cleanup() {
     local exit_code=$?
     echo -e "\n${YELLOW}-> Signal caught or error detected. Cleaning up environment...${NC}"
-    sudo umount "$MOUNT_POINT/Live/swapfile" 2>/dev/null || true
+    sudo umount "$MOUNT_POINT/var/lib/swapfile" 2>/dev/null || true
     sudo umount /tmp/zerocache 2>/dev/null || true
     if swapon --show | grep -q "swapfile"; then sudo swapoff -a || true; fi
+    
+    # Close LUKS container if open
+    if [ -b "/dev/mapper/cryptroot" ]; then
+        log "Closing LUKS container..."
+        sudo cryptsetup close cryptroot 2>/dev/null || true
+    fi
     
     if mountpoint -q "$MOUNT_POINT"; then
         sudo fuser -km "$MOUNT_POINT" 2>/dev/null || true
@@ -101,14 +107,168 @@ fi
 # --- Phase 1: Host Picker (Moved from P4) ---
 echo -e "\n${YELLOW}## [ 1 ] HOST SELECTION ##${NC}"
 mapfile -t HOST_LIST < <(grep -P '^\s+[a-zA-Z0-9_-]+\s+=\s+mkHost' flake.nix | awk '{print $1}')
-HOST_COUNT=${#HOST_LIST[@]}
-if [ "$HOST_COUNT" -eq 1 ]; then SELECTED_HOST="${HOST_LIST[0]}"; else
-    for i in "${!HOST_LIST[@]}"; do echo -e "  $((i+1))) ${CYAN}${HOST_LIST[$i]}${NC}"; done
-    while true; do
-        read -p "Select Host [1-$HOST_COUNT]: " HOST_CHOICE
-        if [[ "$HOST_CHOICE" =~ ^[0-9]+$ ]] && [ "$HOST_CHOICE" -ge 1 ]; then SELECTED_HOST="${HOST_LIST[$((HOST_CHOICE-1))]}"; break; fi
+# Also include previously generated hosts from src/hosts/generated/
+if [ -d "src/hosts/generated" ]; then
+    for d in src/hosts/generated/*/; do
+        [ -d "$d" ] && HOST_LIST+=("$(basename "$d")")
     done
 fi
+# Deduplicate
+mapfile -t HOST_LIST < <(printf '%s\n' "${HOST_LIST[@]}" | sort -u)
+HOST_COUNT=${#HOST_LIST[@]}
+
+# Build menu options
+echo -e "  $((HOST_COUNT+1))) ${CYAN}Generate new host from hardware config${NC}"
+TOTAL_OPTIONS=$((HOST_COUNT+1))
+
+if [ "$HOST_COUNT" -eq 1 ]; then
+    read -p "Select Host [1-$TOTAL_OPTIONS] (Default: 1): " HOST_CHOICE
+    HOST_CHOICE=${HOST_CHOICE:-1}
+    if [[ "$HOST_CHOICE" -eq "$TOTAL_OPTIONS" ]]; then
+        GENERATE_MODE="true"
+    else
+        SELECTED_HOST="${HOST_LIST[0]}"
+    fi
+else
+    for i in "${!HOST_LIST[@]}"; do echo -e "  $((i+1))) ${CYAN}${HOST_LIST[$i]}${NC}"; done
+    while true; do
+        read -p "Select Host [1-$TOTAL_OPTIONS]: " HOST_CHOICE
+        if [[ "$HOST_CHOICE" =~ ^[0-9]+$ ]] && [ "$HOST_CHOICE" -ge 1 ] && [ "$HOST_CHOICE" -le "$TOTAL_OPTIONS" ]; then
+            if [[ "$HOST_CHOICE" -eq "$TOTAL_OPTIONS" ]]; then
+                GENERATE_MODE="true"
+                break
+            else
+                SELECTED_HOST="${HOST_LIST[$((HOST_CHOICE-1))]}"
+                break
+            fi
+        fi
+    done
+fi
+
+# --- Phase 1b: Hardware Config Generation ---
+if [[ "$GENERATE_MODE" == "true" ]]; then
+    echo -e "\n${YELLOW}## [ 1b ] HARDWARE CONFIG GENERATION ##${NC}"
+    echo -e "${CYAN}This will run nixos-generate-config on the target system to detect hardware.${NC}"
+    echo -e "${CYAN}A new host will be created in src/hosts/generated/.${NC}"
+    echo ""
+    echo -e "${RED}!! NOTE: The generated config is a starting point. You will almost certainly${NC}"
+    echo -e "${RED}!! want to customize it — add your preferred desktop, roles, kernel tweaks,${NC}"
+    echo -e "${RED}!! power management, drivers, and other host-specific settings.${NC}"
+    echo ""
+
+    read -p "Enter a name for this host (e.g., 'my-desktop'): " GEN_HOST_NAME
+    if [ -z "$GEN_HOST_NAME" ]; then
+        echo -e "${RED}Hostname cannot be empty. Aborting generation.${NC}"
+        exit 1
+    fi
+
+    # Sanitize hostname (lowercase, replace spaces/special chars with hyphens)
+    GEN_HOST_NAME=$(echo "$GEN_HOST_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
+    echo -e "${GREEN}-> Sanitized hostname: $GEN_HOST_NAME${NC}"
+
+    GEN_DIR="src/hosts/generated/$GEN_HOST_NAME"
+    if [ -d "$GEN_DIR" ]; then
+        echo -e "${RED}Host directory already exists: $GEN_DIR${NC}"
+        read -p "Overwrite? [y/N] " OVERWRITE_CHOICE
+        if [[ ! "$OVERWRITE_CHOICE" =~ ^[Yy]$ ]]; then
+            echo "Aborting."
+            exit 1
+        fi
+    fi
+
+    mkdir -p "$GEN_DIR"
+
+    # Generate hardware config to a temp location using the installer's nix
+    log "Generating hardware configuration from current system..."
+    TEMP_HW_CONFIG=$(mktemp /tmp/hardware-XXXXXX.nix)
+
+    # Use nixos-generate-config if available, otherwise create a stub
+    if command -v nixos-generate-config &> /dev/null; then
+        nixos-generate-config --show-hardware-config > "$TEMP_HW_CONFIG" 2>/dev/null
+        if [ $? -ne 0 ]; then
+            echo -e "${YELLOW}WARNING: nixos-generate-config failed. Creating minimal stub.${NC}"
+            cat > "$TEMP_HW_CONFIG" << 'HWEOF'
+# Auto-generated hardware config — replace with output of:
+# nixos-generate-config --show-hardware-config
+{ config, lib, modulesPath, ... }:
+
+{
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
+
+  boot.initrd.availableKernelModules = [ ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ ];
+  boot.extraModulePackages = [ ];
+
+  networking.useDHCP = lib.mkDefault true;
+}
+HWEOF
+        fi
+    else
+        echo -e "${YELLOW}WARNING: nixos-generate-config not found. Creating minimal stub.${NC}"
+        cat > "$TEMP_HW_CONFIG" << 'HWEOF'
+# Auto-generated hardware config — replace with output of:
+# nixos-generate-config --show-hardware-config
+{ config, lib, modulesPath, ... }:
+
+{
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
+
+  boot.initrd.availableKernelModules = [ ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ ];
+  boot.extraModulePackages = [ ];
+
+  networking.useDHCP = lib.mkDefault true;
+}
+HWEOF
+    fi
+
+    cp "$TEMP_HW_CONFIG" "$GEN_DIR/hardware.nix"
+    rm -f "$TEMP_HW_CONFIG"
+
+    # Create main.nix stub
+    cat > "$GEN_DIR/main.nix" << MAINEOF
+# Host-specific config for $GEN_HOST_NAME
+# Generated from hardware detection — customize this to your needs.
+#
+# Things you'll likely want to configure:
+#   - Desktop environment (e.g., desktop = ["hyprland" "gnome"];)
+#   - Roles (e.g., roles = ["web" "dev" "pipewire" "gaming"];)
+#   - Kernel parameters and sysctl tweaks
+#   - Power management (TLP, thermald, etc.)
+#   - Hardware-specific drivers (GPU, Wi-Fi, Bluetooth)
+#   - ZRAM / swap configuration
+{ pkgs, lib, ... }:
+
+{
+  # Your host-specific configuration goes here.
+  # See other hosts in src/hosts/ for examples.
+}
+MAINEOF
+
+    echo -e "${GREEN}-> Created $GEN_DIR/hardware.nix and $GEN_DIR/main.nix${NC}"
+
+    # The host is automatically picked up by flake.nix's generated host scanner.
+    # No manual flake patching needed — any directory in src/hosts/generated/ becomes a host.
+
+    SELECTED_HOST="$GEN_HOST_NAME"
+    echo ""
+    echo -e "${YELLOW}======================================================================${NC}"
+    echo -e "${YELLOW}  IMPORTANT: The generated config is a minimal starting point.${NC}"
+    echo -e "${YELLOW}  Before installing, you should review and customize:${NC}"
+    echo -e "${YELLOW}    - src/hosts/generated/$GEN_HOST_NAME/hardware.nix${NC}"
+    echo -e "${YELLOW}    - src/hosts/generated/$GEN_HOST_NAME/main.nix${NC}"
+    echo -e "${YELLOW}  Add your preferred desktop, roles, kernel config, drivers, etc.${NC}"
+    echo -e "${YELLOW}======================================================================${NC}"
+    echo ""
+    read -p "Press Enter to continue with installation..."
+fi
+
 echo -e "${GREEN}-> Selected Host: $SELECTED_HOST${NC}"
 
 # --- Phase 2: Hardware Discovery & Unmount ---
@@ -152,19 +312,53 @@ if [[ "$FORMAT_CHOICE" =~ ^[Yy]$ ]]; then
     sgdisk -n 2:0:0 -t 2:8300 -c 2:"ZenOS-N" "$TARGET_DEV"
     sudo partprobe "$TARGET_DEV" && sleep 2
     mkfs.vfat -F 32 -n BOOT "$BOOT_PART"
-    mkfs.btrfs -f -L ZenOS-N "$ROOT_PART"
+
+    # --- LUKS Encryption Prompt ---
+    echo -e "\n${YELLOW}## [ ? ] DISK ENCRYPTION ##${NC}"
+    read -p "Enable LUKS full-disk encryption on root? [y/N] " LUKS_CHOICE
+    LUKS_ENABLED="false"
+    if [[ "$LUKS_CHOICE" =~ ^[Yy]$ ]]; then
+        LUKS_ENABLED="true"
+        log "Formatting root partition with LUKS2..."
+        sudo cryptsetup luksFormat --type luks2 --cipher aes-xts-plain64 --key-size 512 --hash sha256 --iter-time 5000 "$ROOT_PART"
+        log "Opening LUKS container..."
+        sudo cryptsetup open "$ROOT_PART" cryptroot
+        log "Creating Btrfs filesystem inside LUKS container..."
+        mkfs.btrfs -f -L ZenOS-N /dev/mapper/cryptroot
+    else
+        mkfs.btrfs -f -L ZenOS-N "$ROOT_PART"
+    fi
 else
     log "Resume Mode Active."
     RESUME_MODE="true"
 fi
 
 BOOT_UUID=$(lsblk -dno UUID "$BOOT_PART")
-ROOT_UUID=$(lsblk -dno UUID "$ROOT_PART")
+
+if [[ "$LUKS_ENABLED" == "true" ]]; then
+    # With LUKS: rootUUID = physical partition UUID (for LUKS device lookup)
+    ROOT_UUID=$(lsblk -dno UUID "$ROOT_PART")
+    BTRFS_UUID=$(lsblk -dno UUID /dev/mapper/cryptroot)
+    log "LUKS container opened. Btrfs UUID: $BTRFS_UUID"
+else
+    ROOT_UUID=$(lsblk -dno UUID "$ROOT_PART")
+fi
 
 # --- Phase 3.5: Flake Patching ---
 log "Patching flake for $SELECTED_HOST..."
 sed -i "/$SELECTED_HOST = mkHost {/,/};/s/rootUUID = \".*\"/rootUUID = \"$ROOT_UUID\"/" flake.nix
 sed -i "/$SELECTED_HOST = mkHost {/,/};/s/bootUUID = \".*\"/bootUUID = \"$BOOT_UUID\"/" flake.nix
+
+# Patch LUKS enable state in flake
+if [[ "$LUKS_ENABLED" == "true" ]]; then
+    # Verify luks block exists in host config
+    if grep -A 20 "$SELECTED_HOST = mkHost {" flake.nix | grep -q "luks.*enable.*true"; then
+        log "LUKS enabled in flake host config."
+    else
+        log "WARNING: LUKS format was performed but luks.enable is not set in flake."
+        log "  Manually add luks = { enable = true; }; to the $SELECTED_HOST host block."
+    fi
+fi
 
 # [ FIX ] UUID Verification Guard
 FLAKE_ROOT_UUID=$(grep -A 5 "$SELECTED_HOST = mkHost {" flake.nix | grep "rootUUID" | awk -F'"' '{print $2}')
@@ -185,10 +379,20 @@ mount_target() {
     local root_p=$1
     local boot_p=$2
     local resume=$3
+    local luks=$4
     
     if mountpoint -q "$MOUNT_POINT"; then 
         sudo fuser -km "$MOUNT_POINT" 2>/dev/null || true
         sudo umount -R "$MOUNT_POINT" || true 
+    fi
+
+    # If LUKS, ensure the mapper device is open
+    if [[ "$luks" == "true" ]] && [ ! -b "/dev/mapper/cryptroot" ]; then
+        log "Opening LUKS container for mounting..."
+        sudo cryptsetup open "$root_p" cryptroot
+        root_p="/dev/mapper/cryptroot"
+    elif [[ "$luks" == "true" ]]; then
+        root_p="/dev/mapper/cryptroot"
     fi
 
     log "Establishing Flat NZFS 2.3 Peer Hierarchy (Btrfs) at $MOUNT_POINT..."
@@ -196,54 +400,15 @@ mount_target() {
     
     # [ ACTION ] Mount Root with ZSTD + Commit=120 (Speed Hack)
     mount -o compress=zstd,noatime,commit=120 "$root_p" "$MOUNT_POINT"
-    
-    # [ ACTION ] Pre-Populate NZFS Structure & .hidden
-    log "Pre-populating NZFS structure..."
-    mkdir -p "$MOUNT_POINT"/{System,Users,Live,Apps,Mount,boot,Config}
-    mkdir -p "$MOUNT_POINT"/System/nix
-    
-    # 1. System
-    mkdir -p "$MOUNT_POINT"/System/{Boot,Store,Current,Booted,Binaries,Modules,Firmware,Graphics,Wrappers,State,History,Logs}
-    
-    # 2. Live
-    mkdir -p "$MOUNT_POINT"/Live/{dev,proc,sys,run,Temp,Memory,Services,Network,Sessions,Input,Video,Sound}
-    mkdir -p "$MOUNT_POINT"/Live/Drives/{ID,Label,Partitions,Physical}
-    
-    # 3. Config Structure
-    mkdir -p "$MOUNT_POINT"/Config/{Misc,Audio,Bluetooth,Desktop,Display,Fonts,Hardware,Network,Nix,Zero,Services,Security,System,User}
-    mkdir -p "$MOUNT_POINT"/Config/Security/{PAM,SSH,SSL,Polkit}
-    mkdir -p "$MOUNT_POINT"/Config/Audio/{Pipewire,Alsa}
-    mkdir -p "$MOUNT_POINT"/Config/Desktop/{XDG,GDM,Plymouth,Remote,DConf}
-    mkdir -p "$MOUNT_POINT"/Config/Display/X11
-    mkdir -p "$MOUNT_POINT"/Config/Hardware/{Udev,LVM,Modprobe,Modules,BlockDev,UDisks,UPower,Qemu}
-    mkdir -p "$MOUNT_POINT"/Config/Network/Manager
-    mkdir -p "$MOUNT_POINT"/Config/Zero/{NixOS,Scripts}
-    mkdir -p "$MOUNT_POINT"/Config/Services/{Systemd,DBus,Avahi,Geoclue}
-    
-    # 4. Config Files
-    touch "$MOUNT_POINT"/Config/Network/{hosts,resolv.conf,resolvconf.conf,hostname,ethertypes,host.conf,ipsec.secrets,netgroup,protocols,rpc,services}
-    touch "$MOUNT_POINT"/Config/Security/sudoers
-    touch "$MOUNT_POINT"/Config/System/{fstab,os-release,profile,locale.conf,vconsole.conf,machine-id,localtime,inputrc,issue,kbd,login.defs,lsb-release,man_db.conf,nanorc,nscd.conf,nsswitch.conf,terminfo,zoneinfo}
-    touch "$MOUNT_POINT"/Config/User/{passwd,group,shadow,shells,subgid,subuid,bashrc,bash_logout,zshrc,zshenv,zprofile,zinputrc}
-    
-    # 5. Users
-    mkdir -p "$MOUNT_POINT"/Users/Admin
-    
-    printf "bin\nboot\ndev\netc\nhome\nlib\nlib64\nmnt\nnix\nopt\nproc\nroot\nrun\nsrv\nsys\ntmp\nusr\nvar" > "$MOUNT_POINT"/.hidden
-    chmod 644 "$MOUNT_POINT"/.hidden
 
     # Mount Boot
     mount "$boot_p" "$MOUNT_POINT"/boot
-    
-    # We bind /boot to /System/Boot for the installer session so verification works
-    mount --bind "$MOUNT_POINT"/boot "$MOUNT_POINT"/System/Boot
 
-    # [ CRITICAL ] Bind Mount the Store from /System/nix to /nix
+    # Create /nix for nixos-install
     mkdir -p "$MOUNT_POINT"/nix
-    mount --bind "$MOUNT_POINT"/nix "$MOUNT_POINT"/System/nix
 
     # --- SWAP INITIALIZATION (DYNAMIC MODE) ---
-    local PHYSICAL_SWAP="$MOUNT_POINT/Live/swapfile"
+    local PHYSICAL_SWAP="$MOUNT_POINT/var/lib/swapfile"
     if [ ! -f "$PHYSICAL_SWAP" ]; then
         # Check actual RAM and Disk Space
         local TOTAL_RAM_GB=$(free -g | awk '/^Mem:/{print $2}')
@@ -278,7 +443,7 @@ mount_target() {
     if [ -f "$PHYSICAL_SWAP" ] && ! swapon --show | grep -q "$(readlink -f $PHYSICAL_SWAP)"; then swapon "$PHYSICAL_SWAP"; fi
 }
 
-mount_target "$ROOT_PART" "$BOOT_PART" "$RESUME_MODE"
+mount_target "$ROOT_PART" "$BOOT_PART" "$RESUME_MODE" "$LUKS_ENABLED"
 
 # --- Phase 5: Synthesis ---
 echo -e "\n${YELLOW}## [ ? ] CORE-AWARE PARALLELISM ##${NC}"
@@ -296,10 +461,10 @@ fi
 
 read -p "Enable Ultra-Speed Mode (Disable Docs)? [Y/n] " SPEED_CHOICE
 if [[ "$SPEED_CHOICE" =~ ^[Yy]$ || -z "$SPEED_CHOICE" ]]; then
-    if [ -f "src/modules/core/nzfs.nix" ]; then NZFS_FILE="src/modules/core/nzfs.nix"; elif [ -f "nzfs.nix" ]; then NZFS_FILE="nzfs.nix"; fi
-    if [ -n "$NZFS_FILE" ] && ! grep -q "documentation.enable = false;" "$NZFS_FILE"; then
-         log "Disabling documentation in NZFS module..."
-         sed -i '/config = lib.mkIf cfg.enable {/a \    documentation.enable = false;\n    documentation.nixos.enable = false;\n    documentation.man.enable = false;' "$NZFS_FILE"
+    FS_FILE="src/modules/core/filesystem.nix"
+    if [ -f "$FS_FILE" ] && ! grep -q "documentation.enable = false;" "$FS_FILE"; then
+         log "Disabling documentation..."
+         sed -i '/config = lib.mkIf cfg.enable {/a \    documentation.enable = false;\n    documentation.nixos.enable = false;\n    documentation.man.enable = false;' "$FS_FILE"
     fi
 fi
 
@@ -420,8 +585,11 @@ check "[ -f $MOUNT_POINT/boot/EFI/refind/zenos-entries.conf ]" "ZenOS Boot Entri
 # 3. User Check
 check "grep -E -q ':1[0-9]{3}:' $MOUNT_POINT/etc/passwd" "Primary User Created"
 
-# 4. NZFS Check
-check "[ -d $MOUNT_POINT/System/nix ] && [ -d $MOUNT_POINT/Config ]" "NZFS Hierarchy (Bind Mount Ready)"
+# 4. LUKS Check
+if [[ "$LUKS_ENABLED" == "true" ]]; then
+    check "[ -b /dev/mapper/cryptroot ]" "LUKS Container Open"
+    check "sudo cryptsetup status cryptroot 2>/dev/null | grep -q 'is active'" "LUKS Device Active"
+fi
 
 trap - ERR SIGINT
 echo -e "\n${GREEN}## [ SUCCESS ] ZENOS SYNTHESIZED (v6.1.0 - Final Guard)${NC}"

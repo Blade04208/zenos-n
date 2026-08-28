@@ -112,12 +112,18 @@
           users ? [ "blade0" ],
           roles ? [ ],
           serverServices ? [ ],
+          luks ? null,
+          isVM ? false,
         }:
         let
           # [LOGIC] Convert "Doromi Tul 2" -> "doromi-tul-2"
           # 1. Lowercase
           # 2. Replace spaces with hyphens
           hostName = lib.strings.toLower (builtins.replaceStrings [ " " ] [ "-" ] prettyName);
+
+          # [LOGIC] Derive LUKS settings
+          useLuks = luks != null && (luks.enable or false);
+          luksDeviceName = if luks != null then (luks.deviceName or "cryptroot") else "cryptroot";
         in
         nixpkgs.lib.nixosSystem {
           inherit system;
@@ -132,6 +138,9 @@
               rootUUID
               bootUUID
               locale
+              useLuks
+              luksDeviceName
+              isVM
               ;
             # Alias prettyName to devicePrettyName for module compatibility
             devicePrettyName = prettyName;
@@ -159,8 +168,8 @@
                   # Enforces redistributable firmware (linux-firmware) for all hosts.
                   hardware.enableRedistributableFirmware = true;
 
-                  # [ ZenFS ] Core Configuration
-                  services.zenfs = {
+                  # [ ZenFS ] Core Configuration (disabled for VMs)
+                  services.zenfs = lib.mkIf (!isVM) {
                     enable = true;
                     roaming.enable = false;
                     janitor = {
@@ -171,6 +180,12 @@
                     };
                     mainDrive = rootUUID;
                     bootDrive = bootUUID;
+                  };
+
+                  # [ Filesystem ] Core mounts (root, boot, swap) — disabled for VMs
+                  # VMs use NixOS default filesystem layout (installer handles partitioning)
+                  services.zenos-filesystem = lib.mkIf (!isVM) {
+                    enable = true;
                   };
 
                   # [ ZenOS Maintenance ] Default Enable
@@ -241,43 +256,84 @@
         };
     in
     {
-      nixosConfigurations = {
-        book3 = mkHost {
-          prettyName = "Book3";
-
-          rootUUID = "11c806f5-3c67-4c3d-af29-26d0d074d773";
-          bootUUID = "83E2-E894";
-          locale = {
-            timeZone = "Europe/Dublin";
-            language = "en_US.UTF-8";
-            defaultLocale = "en_GB.UTF-8";
-            kbLayout = "gb";
+      nixosConfigurations =
+        {
+          # ============================================================================
+          # Generic VM Host
+          # For QEMU/KVM virtual machines. Uses systemd-boot, virtio drivers,
+          # and minimal hardware config. The installer will patch UUIDs as needed.
+          # ============================================================================
+          vm = mkHost {
+            prettyName = "VM";
+            isVM = true;
+            locale = {
+              timeZone = "Europe/Warsaw";
+              language = "en_US.UTF-8";
+              defaultLocale = "en_US.UTF-8";
+              kbLayout = "us";
+            };
+            users = [ "blade0" ];
+            desktop = [ "gnome" ];
+            roles = [ "web" "dev" ];
+            excludeCoreModules = [ "misc-services" ];
           };
-          users = [
-            "blade0"
-          ];
-          desktop = [
-            "hyprland"
-            "gnome"
-          ];
-          roles = [
-            "web"
-            "dev"
-            "pipewire"
-            "gaming"
-            "creative/graphics"
-            "virtualization"
-            # "mpd"
-          ];
-          # ill change this once i install it for more than testing
-          excludeCoreModules = [
-            "misc-services"
-          ];
-          extraModules = [
-            inputs.nixos-hardware.nixosModules.common-cpu-intel
-            inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-          ];
+
+          # ============================================================================
+          # Auto-Generated Hosts
+          # Any host directory under src/hosts/generated/ is automatically picked up.
+          # These are created by the installer from `nixos-generate-config` output.
+          # ============================================================================
+        }
+        // lib.genAttrs
+          (let
+            generatedDir = ./src/hosts/generated;
+            dirExists = builtins.pathExists generatedDir;
+            entries = if dirExists then builtins.readDir generatedDir else { };
+            hostDirs = lib.filterAttrs (name: type: type == "directory") entries;
+          in
+          builtins.attrNames hostDirs)
+          (hostName: mkHost {
+            prettyName = hostName;
+            isVM = false;
+            users = [ "blade0" ];
+            desktop = [ "gnome" ];
+            roles = [ "web" "dev" ];
+          })
+        // {
+          book3 = mkHost {
+            prettyName = "Book3";
+            rootUUID = "11c806f5-3c67-4c3d-af29-26d0d074d773";
+            bootUUID = "83E2-E894";
+            locale = {
+              timeZone = "Europe/Dublin";
+              language = "en_US.UTF-8";
+              defaultLocale = "en_GB.UTF-8";
+              kbLayout = "gb";
+            };
+            users = [ "blade0" ];
+            desktop = [
+              "hyprland"
+              "gnome"
+            ];
+            roles = [
+              "web"
+              "dev"
+              "pipewire"
+              "gaming"
+              "creative/graphics"
+              "virtualization"
+            ];
+            excludeCoreModules = [
+              "misc-services"
+            ];
+            extraModules = [
+              inputs.nixos-hardware.nixosModules.common-cpu-intel
+              inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+            ];
+            luks = {
+              enable = true;
+            };
+          };
         };
-      };
     };
 }
