@@ -22,14 +22,6 @@ in
     consoleLogLevel = 0;
     initrd.verbose = false;
 
-    initrd.availableKernelModules = lib.mkIf useLuks [
-      "cryptsetup"
-    ];
-
-    initrd.kernelModules = lib.mkIf useLuks [
-      "dm_mod"
-    ];
-
     kernelParams = [
       "quiet"
       "splash"

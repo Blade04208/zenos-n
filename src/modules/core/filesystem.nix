@@ -31,13 +31,13 @@ in
 
   config = lib.mkIf cfg.enable {
     fileSystems = {
-      "/" = {
+      "/" = lib.mkForce {
         device = if useLuks then "/dev/mapper/${luksDeviceName}" else "/dev/disk/by-uuid/${rootUUID}";
         fsType = cfg.fsType;
         neededForBoot = true;
       };
 
-      "/boot" = {
+      "/boot" = lib.mkForce {
         device = "/dev/disk/by-uuid/${bootUUID}";
         fsType = "vfat";
         neededForBoot = true;
