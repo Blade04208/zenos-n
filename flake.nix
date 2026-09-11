@@ -169,7 +169,7 @@
                   hardware.enableRedistributableFirmware = true;
 
                   # [ ZenFS ] Core Configuration (disabled for VMs)
-                  services.zenfs = lib.mkIf (!isVM) {
+                  system.zenfs = lib.mkIf (!isVM) {
                     enable = true;
                     roaming.enable = false;
                     janitor = {
@@ -256,84 +256,94 @@
         };
     in
     {
-      nixosConfigurations =
-        {
-          # ============================================================================
-          # Generic VM Host
-          # For QEMU/KVM virtual machines. Uses systemd-boot, virtio drivers,
-          # and minimal hardware config. The installer will patch UUIDs as needed.
-          # ============================================================================
-          vm = mkHost {
-            prettyName = "VM";
-            isVM = true;
-            locale = {
-              timeZone = "Europe/Warsaw";
-              language = "en_US.UTF-8";
-              defaultLocale = "en_US.UTF-8";
-              kbLayout = "us";
-            };
-            users = [ "blade0" ];
-            desktop = [ "gnome" ];
-            roles = [ "web" "dev" ];
-            excludeCoreModules = [ "misc-services" ];
+      nixosConfigurations = {
+        # ============================================================================
+        # Generic VM Host
+        # For QEMU/KVM virtual machines. Uses systemd-boot, virtio drivers,
+        # and minimal hardware config. The installer will patch UUIDs as needed.
+        # ============================================================================
+        vm = mkHost {
+          prettyName = "VM";
+          isVM = true;
+          locale = {
+            timeZone = "Europe/Warsaw";
+            language = "en_US.UTF-8";
+            defaultLocale = "en_US.UTF-8";
+            kbLayout = "us";
           };
-
-          # ============================================================================
-          # Auto-Generated Hosts
-          # Any host directory under src/hosts/generated/ is automatically picked up.
-          # These are created by the installer from `nixos-generate-config` output.
-          # ============================================================================
-        }
-        // lib.genAttrs
-          (let
-            generatedDir = ./src/hosts/generated;
-            dirExists = builtins.pathExists generatedDir;
-            entries = if dirExists then builtins.readDir generatedDir else { };
-            hostDirs = lib.filterAttrs (name: type: type == "directory") entries;
-          in
-          builtins.attrNames hostDirs)
-          (hostName: mkHost {
-            prettyName = hostName;
-            isVM = false;
-            users = [ "blade0" ];
-            desktop = [ "gnome" ];
-            roles = [ "web" "dev" ];
-          })
-        // {
-          book3 = mkHost {
-            prettyName = "Book3";
-            rootUUID = "11c806f5-3c67-4c3d-af29-26d0d074d773";
-            bootUUID = "83E2-E894";
-            locale = {
-              timeZone = "Europe/Dublin";
-              language = "en_US.UTF-8";
-              defaultLocale = "en_GB.UTF-8";
-              kbLayout = "gb";
-            };
-            users = [ "blade0" ];
-            desktop = [
-              "hyprland"
-              "gnome"
-            ];
-            roles = [
-              "web"
-              "dev"
-              "pipewire"
-              "gaming"
-              "creative/graphics"
-              "virtualization"
-            ];
-            excludeCoreModules = [
-              "misc-services"
-            ];
-            extraModules = [
-              inputs.nixos-hardware.nixosModules.common-cpu-intel
-              inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
-            ];
-            luks = {
-              enable = true;
-            };
-          };
+          users = [ "blade0" ];
+          desktop = [ "gnome" ];
+          roles = [
+            "web"
+            "dev"
+          ];
+          excludeCoreModules = [ "misc-services" ];
         };
+
+        # ============================================================================
+        # Auto-Generated Hosts
+        # Any host directory under src/hosts/generated/ is automatically picked up.
+        # These are created by the installer from `nixos-generate-config` output.
+        # ============================================================================
+      }
+      //
+        lib.genAttrs
+          (
+            let
+              generatedDir = ./src/hosts/generated;
+              dirExists = builtins.pathExists generatedDir;
+              entries = if dirExists then builtins.readDir generatedDir else { };
+              hostDirs = lib.filterAttrs (name: type: type == "directory") entries;
+            in
+            builtins.attrNames hostDirs
+          )
+          (
+            hostName:
+            mkHost {
+              prettyName = hostName;
+              isVM = false;
+              users = [ "blade0" ];
+              desktop = [ "gnome" ];
+              roles = [
+                "web"
+                "dev"
+              ];
+            }
+          )
+      // {
+        book3 = mkHost {
+          prettyName = "Book3";
+          rootUUID = "11c806f5-3c67-4c3d-af29-26d0d074d773";
+          bootUUID = "83E2-E894";
+          locale = {
+            timeZone = "Europe/Dublin";
+            language = "en_US.UTF-8";
+            defaultLocale = "en_GB.UTF-8";
+            kbLayout = "gb";
+          };
+          users = [ "blade0" ];
+          desktop = [
+            "hyprland"
+            "gnome"
+          ];
+          roles = [
+            "web"
+            "dev"
+            "pipewire"
+            "gaming"
+            "creative/graphics"
+            "creative/writing"
+            "virtualization"
+          ];
+          excludeCoreModules = [
+            "misc-services"
+          ];
+          extraModules = [
+            inputs.nixos-hardware.nixosModules.common-cpu-intel
+            inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+          ];
+          luks = null;
+        };
+      };
     };
 }

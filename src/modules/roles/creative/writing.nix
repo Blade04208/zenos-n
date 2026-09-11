@@ -1,4 +1,4 @@
-# creativity tools
+# writing tools
 { pkgs, ... }:
 {
   services.flatpak.packages = [

@@ -113,8 +113,17 @@
   services.flatpak.packages = [
     "io.m51.Gelly"
     "com.github.IsmaelMartinez.teams_for_linux"
+    "com.github.hugolabe.Wike"
     "com.obsproject.Studio"
+    "de.haeckerfelix.Fragments"
+    "de.haeckerfelix.Shortwave"
+    "io.github.diegopvlk.Cine"
+    "io.github.dp0sk.Crosspipe"
+    "io.github.maniacx.BudsLink"
+    "io.github.tobagin.digger"
+    "io.gitlab.adhami3310.Converter"
     "io.mrarm.mcpelauncher"
-    "org.kde.iconexplorer"
+    "org.gajim.Gajim"
+    "org.gnumeric.Gnumeric"
   ];
 }
