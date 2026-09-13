@@ -30,12 +30,6 @@
       # url = "path:/home/doromiert/Projects/zerobridge";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # [ ZenFS ] Local Input
-    zenfs = {
-      url = "github:doromiert/zenfs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # [ ZenOS Maintenance ]
     zenos-maintenance = {
       url = "github:doromiert/zenos-maintenance";
@@ -168,20 +162,6 @@
                   # Enforces redistributable firmware (linux-firmware) for all hosts.
                   hardware.enableRedistributableFirmware = true;
 
-                  # [ ZenFS ] Core Configuration (disabled for VMs)
-                  system.zenfs = lib.mkIf (!isVM) {
-                    enable = true;
-                    roaming.enable = false;
-                    janitor = {
-                      offloader = {
-                        enable = false;
-                        threshold = 80;
-                      };
-                    };
-                    mainDrive = rootUUID;
-                    bootDrive = bootUUID;
-                  };
-
                   # [ Filesystem ] Core mounts (root, boot, swap) — disabled for VMs
                   # VMs use NixOS default filesystem layout (installer handles partitioning)
                   services.zenos-filesystem = lib.mkIf (!isVM) {
@@ -230,9 +210,6 @@
                 };
               }
             )
-
-            # [ ZenFS ] Module Import
-            inputs.zenfs.nixosModules.default
 
             # [ ZenOS Maintenance ] Module Import
             inputs.zenos-maintenance.nixosModules.default

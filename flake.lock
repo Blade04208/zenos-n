@@ -374,11 +374,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1789046904,
-        "narHash": "sha256-wWPN/kmzwp4kHBtC6JmVUJHg2Np2VtyfS53mFrI90us=",
+        "lastModified": 1789211355,
+        "narHash": "sha256-A1ma3hqs0aw1VxJPQmT/wh1sjdz8mcryKlkGzlUiIfQ=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "f05d73f35795ded80d7e1264a37e41b461625f9f",
+        "rev": "6e95f93f1392c012afe80a7ac7619ebfec055707",
         "type": "github"
       },
       "original": {
@@ -701,8 +701,8 @@
         "vicinae-extensions": "vicinae-extensions"
       },
       "locked": {
-        "lastModified": 1789161183,
-        "narHash": "sha256-T/Rfforkp6s3WVR2Td+QGOCzlC+yCgWvPkR0G8eMjUY=",
+        "lastModified": 1789298744,
+        "narHash": "sha256-iF3LjJWMzXOALFhj9Jv+ObIo10ZZK2bH/owisP3IQ1Y=",
         "path": "/home/blade0/Projects/NEUX",
         "type": "path"
       },
@@ -719,11 +719,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787850787,
-        "narHash": "sha256-u6V1+a2C9xg+95y/tmRKyvqQqF2IBX7XcwOii6Kw3uQ=",
+        "lastModified": 1789164923,
+        "narHash": "sha256-WLJtpM+BTiFV3FJlXPiiuH+kRdmI139ZJEQmX0KdoGw=",
         "owner": "Blade04208",
         "repo": "NEUX-theming",
-        "rev": "310643b9f61f5a490436750185a132806403c8ea",
+        "rev": "7be568c3fb14a6cd2c6091a822a8448999f892af",
         "type": "github"
       },
       "original": {
@@ -1099,7 +1099,6 @@
         "nur": "nur",
         "swisstag": "swisstag",
         "zbridge": "zbridge",
-        "zenfs": "zenfs",
         "zenos-maintenance": "zenos-maintenance"
       }
     },
@@ -1338,26 +1337,6 @@
       "original": {
         "owner": "doromiert",
         "repo": "zerobridge",
-        "type": "github"
-      }
-    },
-    "zenfs": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1789023675,
-        "narHash": "sha256-hvgFhrzDDwE6c9WgAPJ3TwoU0lPjNkzea+Pwo0qLyHE=",
-        "owner": "doromiert",
-        "repo": "zenfs",
-        "rev": "f4ea423b1bd02704ebe385104d994358fa3c1e90",
-        "type": "github"
-      },
-      "original": {
-        "owner": "doromiert",
-        "repo": "zenfs",
         "type": "github"
       }
     },
